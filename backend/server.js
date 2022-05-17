@@ -1,10 +1,8 @@
-//requires
+//Requires
 const http = require("http");
 const app = require("./app");
 const dotenv = require("dotenv").config();
-
-
-//fonction de création du port qui retourne un port valide
+//Fonction de création du port qui retourne un port valide
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
@@ -18,8 +16,7 @@ const normalizePort = val => {
 };
 const port = normalizePort(process.env.PORT || "5000");
 app.set("port", port);
-
-//gestion des erreurs
+//Gestion des erreurs
 const errorHandler = error => {
   if (error.syscall !== "listen") {
     throw error;
@@ -39,8 +36,7 @@ const errorHandler = error => {
       throw error;
   }
 };
-
-//création du server avec l'app express
+//Création du server avec l'app express
 const server = http.createServer(app);
 server.on("error", errorHandler);
 server.on("listening", () => {
@@ -48,6 +44,5 @@ server.on("listening", () => {
   const bind = typeof address === "string" ? "pipe " + address : "port " + port;
   console.log("Listening on " + bind);
 });
-
-//écoute du port du server
+//Ecoute du port du server
 server.listen(port);

@@ -1,8 +1,7 @@
-//connection à la base de données
-
+//Connection à la base de données
 const mysql = require("mysql");
 require("dotenv").config();
-
+//Pool de connection
 const db = mysql.createPool({
     multipleStatements: true,
     connectionLimit: 10,
@@ -11,7 +10,7 @@ const db = mysql.createPool({
     password: process.env.PASSWORDDB,
     database: process.env.DATABASE
 });
-
+//Connection à mysql
 db.query("SELECT 1 + 1 AS solution", function (error, results, fields) {
     if (error) throw error;
     console.log("Connected successfully to MySQL DB !");
