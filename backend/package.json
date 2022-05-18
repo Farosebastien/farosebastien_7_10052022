@@ -20,7 +20,7 @@
     "multer": "^1.4.4",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.16",
-    "secure-password-validator": "^1.0.2",
+    "password-validator": "^5.3.0",
     "toobusy-js": "^0.5.1",
     "validator": "^13.7.0"
   }

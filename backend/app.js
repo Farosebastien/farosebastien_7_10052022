@@ -9,6 +9,8 @@ const bouncer = require("express-bouncer")(10000, 600000, 5);
 const toobusy = require("toobusy-js");
 //Routes requires
 const userRoutes = require("./routes/user");
+const loginRoutes = require("./routes/login");
+const signupRoutes = require("./routes/signup")
 //Express app creation
 const app = express();
 // Helmet firewall
@@ -25,7 +27,7 @@ app.use((req, res, next) => {
 });
 //Bouncer 
 bouncer.blocked = function (req, res, next, remaining) {
-  res.status(429).send("Too many requests have been made, " + "please wait " + remaining / 1000 + " seconds");
+  res.status(429).send("trop de tentative de connexions, " + "veuillez attendre " + remaining / 1000 + " secondes");
 };
 //TooBusy 
 app.use(function (req, res, next) {
@@ -38,6 +40,8 @@ app.use(function (req, res, next) {
 //Routes
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/user", userRoutes);
+app.use("/login", loginRoutes);
+app.use("/signup", signupRoutes);
 //404 errors
 app.use((req,res,next) => {
   const error = new HttpError("Route non trouvée", 404);
