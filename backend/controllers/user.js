@@ -48,12 +48,16 @@ exports.updateUser = (req, res, next) => {
     //Récupération de la requête venant du front et de l'id de l'utilisateur ayant émis cette requête
     const user = userId(req.headers.authorization);
     const { firstname, lastname, username, email } = req.body;
-    //Si il n'y en a pas on laisse image à null
-    let imageUrl;
-    if(req.file) {
-        imageUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
-    } else if (req.body.photo_url){
-        imageUrl = req.body.photo_url;
+    let photo_url;
+    //Si il n'y a pas d'image on laisse à null
+    if (req.body.image === "null") {
+        photo_url;
+    //Mise à jour de l'image 
+    } else if(req.file) {
+        photo_url = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+    //Si l'image ne change pas
+    } else {
+        photo_url = req.body.photo_url;
     }
     //Validation des entrées de l'utilisateur 
     const isFirstnameValid = validator.matches(firstname, regEx);
@@ -64,7 +68,7 @@ exports.updateUser = (req, res, next) => {
     if(isFirstnameValid && isLastnameValid && isUsernameValid && isEmailValid) {
         //Création de la requête sql
         const string = "UPDATE users SET firstname = ?, lastname = ?, username = ?, email = ?, photo_url = ? WHERE id = ?;";
-        const inserts = [firstname, lastname, username, email, imageUrl, user];
+        const inserts = [firstname, lastname, username, email, photo_url, user];
         const sql = mysql.format(string, inserts);
         //Requête sql et mise à jour du profil dans la DB
         db.query(sql, (error, profile) => {
@@ -121,19 +125,43 @@ exports.deleteUser = (req, res, next) => {
     const user = userId(req.headers.authorization);
     //Si c'est bien le même utilisateur qui fait la demande
     if(user === Number(req.params.id)) {
-        //Création de la requête sql
+        //Création des requêtes sql
+        const stringForFile = "SELECT photo_url FROM users WHERE id = ?;";
         const string = "DELETE FROM users WHERE id = ?;";
         const inserts = user;
+        const sqlForFile = mysql.format(stringForFile, inserts);
         const sql = mysql.format(string, inserts);
-        //Requête sql et suppression du profil concerné dans la db
-        db.query(sql, (error, result) => {
-            if(!error) {
-                res.status(200).json({ message: "utilisateur supprimé" });
-            //Si il y a une erreur, le profil n'a pas été supprimé
+        //Requête sql pour récupérer le nom de la photo de l'utilisateur à supprimer
+        db.query(sqlForFile, (error, result) => {
+            const file = String(result[0].photo_url);
+            //Si il y a une photo de profil
+            if(file.length > 0) {
+                //Récupération du nom du fichier dans le dossier images et suppression
+                const fileName = file.split("/images/")[1];
+                fs.unlink(`images/${fileName}`, () => {
+                    //Requête sql et suppression du profil concerné dans la db
+                    db.query(sql, (error, result) => {
+                        if(!error) {
+                            res.status(200).json({ message: "utilisateur supprimé" });
+                        //Si il y a une erreur, le profil n'a pas été supprimé
+                        } else {
+                            return next(new HttpError("erreur, utilisateur non supprimé", 404));
+                        }
+                    });
+                })
+            //Si il n'y a pas de photo de profil
             } else {
-                return next(new HttpError("erreur, utilisateur non supprimé", 404));
+                //Requête sql et suppression du profil concerné dans la db
+                db.query(sql, (error, result) => {
+                    if(!error) {
+                        res.status(200).json({ message: "utilisateur supprimé" });
+                    //Si il y a une erreur, le profil n'a pas été supprimé
+                    } else {
+                        return next(new HttpError("erreur, utilisateur non supprimé", 404));
+                    }
+                });
             }
-        });
+        }); 
     } else {
         res.status(401).json ({ message: "suppression non autorisée" });
     }

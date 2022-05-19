@@ -13,7 +13,7 @@ router.get("/", auth, postsCtrl.getAllPosts);
 router.get("/mostLiked", auth, postsCtrl.getMostLikedPosts);
 router.get("/:id", auth, postsCtrl.getOnePost);
 //Routes put
-router.put("/:id", auth, postsCtrl.updatePost);
+router.put("/:id", auth, multer, postsCtrl.updatePost);
 router.put("/comments/comments_id", auth, postsCtrl.updateComment);
 //Routes delete
 router.delete("/comment/:comments_id", auth, postsCtrl.deleteComment);
