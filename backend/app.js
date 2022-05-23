@@ -10,7 +10,8 @@ const toobusy = require("toobusy-js");
 //Routes requires
 const userRoutes = require("./routes/user");
 const loginRoutes = require("./routes/login");
-const signupRoutes = require("./routes/signup")
+const signupRoutes = require("./routes/signup");
+const postRoutes = require("./routes/posts");
 //Express app creation
 const app = express();
 // Helmet firewall
@@ -42,6 +43,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/user", userRoutes);
 app.use("/login", loginRoutes);
 app.use("/signup", signupRoutes);
+app.use("/post", postRoutes);
 //404 errors
 app.use((req,res,next) => {
   const error = new HttpError("Route non trouvée", 404);

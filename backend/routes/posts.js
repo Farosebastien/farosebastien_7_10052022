@@ -18,3 +18,5 @@ router.put("/comments/comments_id", auth, postsCtrl.updateComment);
 //Routes delete
 router.delete("/comment/:comments_id", auth, postsCtrl.deleteComment);
 router.delete("/:id", auth, postsCtrl.deletePost);
+
+module.exports = router;

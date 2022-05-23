@@ -148,7 +148,7 @@ exports.deleteUser = (req, res, next) => {
                             return next(new HttpError("erreur, utilisateur non supprimé", 404));
                         }
                     });
-                })
+                });
             //Si il n'y a pas de photo de profil
             } else {
                 //Requête sql et suppression du profil concerné dans la db
