@@ -34,7 +34,7 @@ exports.signup = (req, res, next) => {
         //Cryptage du mot de passe
         bcrypt.hash(password, 10).then((hash) => {
             //Création de la requête sql
-            const string = "INSERT INTO users (firstname, lastname, username, email, password) VALUES (?, ?, ?, ?, ?);";
+            const string = "INSERT INTO users (firstname, lastname, username, email, role, password) VALUES (?, ?, ?, ?, 0, ?);";
             const inserts = [firstname, lastname, username, email, hash];
             const sql = mysql.format(string, inserts);
             //Requête sql et enregistrement dans la DB
@@ -43,7 +43,8 @@ exports.signup = (req, res, next) => {
                     res.status(201).json({
                         message: "utilisateur créé",
                         userId: user.insertId,
-                        token: jwt.sign({ userId: user.insertId }, process.env.JWT_SECRET_KEY, {expiresIn: "1h"})
+                        role: "user",
+                        token: jwt.sign({ userId: user.insertId, account: 0 }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
                     });
                 //Si il y a une erreur c'est que l'utilisateur est déjà existant
                 } else {

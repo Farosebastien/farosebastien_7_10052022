@@ -25,12 +25,18 @@ function userId(auth) {
     const token = auth.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
     const id = decodedToken.userId;
-    return id;
+    const account = decodedToken.account
+    return {
+        id: id,
+        role: account
+    };
 }
 //Récupération du profil d'un utilisateur en fonction de son id
 exports.getUser = (req, res, next) => {
+    //récupération de l'utilisateur qui effectue la requête
+    const user = userId(req.headers.authorization);
     //Création de la requête sql
-    const string = "SELECT firstname, lastname, username, email, photo_url FROM users WHERE id = ?;";
+    const string = "SELECT firstname, lastname, username, email, role, photo_url FROM users WHERE id = ?;";
     const inserts = req.params.id;
     const sql = mysql.format(string, inserts);
     //Requête sql et récupération dans la DB 
@@ -39,13 +45,16 @@ exports.getUser = (req, res, next) => {
             return next(new HttpError("utilisateur non trouvé", 404));
         //Si il y a une erreur c'est que l'utilisateur n'est pas trouvé
         } else {
-            res.status(200).json(profile[0]);
+            res.status(200).json({
+                profile: profile[0],
+                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+            });
         }
     });
 };
 //Mise à jour du profil d'un utilisateur
 exports.updateUser = (req, res, next) => {
-    //Récupération de la requête venant du front et de l'id de l'utilisateur ayant émis cette requête
+    //Récupération de la requête venant du front et de l'utilisateur ayant émis cette requête
     const user = userId(req.headers.authorization);
     const { firstname, lastname, username, email } = req.body;
     let photo_url;
@@ -68,12 +77,15 @@ exports.updateUser = (req, res, next) => {
     if(isFirstnameValid && isLastnameValid && isUsernameValid && isEmailValid) {
         //Création de la requête sql
         const string = "UPDATE users SET firstname = ?, lastname = ?, username = ?, email = ?, photo_url = ? WHERE id = ?;";
-        const inserts = [firstname, lastname, username, email, photo_url, user];
+        const inserts = [firstname, lastname, username, email, photo_url, user.id];
         const sql = mysql.format(string, inserts);
         //Requête sql et mise à jour du profil dans la DB
         db.query(sql, (error, profile) => {
             if(!error) {
-                res.status(200).json({ message: "profil mis à jour" });
+                res.status(200).json({ 
+                    message: "profil mis à jour",
+                    token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                });
             //Si il y a une erreur, la mise à jour a échouée
             } else {
                 return next(new HttpError("erreur, mise à jour du profil échouée", 400))
@@ -102,12 +114,15 @@ exports.updateUserPassword = (req, res, next) => {
         bcrypt.hash(req.body.password, 10).then((hash) => {
             //Création de la requête sql
             const string = "UPDATE users SET password = ? WHERE id = ?;";
-            const inserts = [hash, user];
+            const inserts = [hash, user.id];
             const sql = mysql.format(string, inserts);
             //Requête sql et mise à jour du mot de passe dans la db
             db.query(sql, (error, password) => {
                 if(!error) {
-                    res.status(201).json({ message: "mot de passe mis à jour" });
+                    res.status(201).json({ 
+                        message: "mot de passe mis à jour",
+                        token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                    });
                 //Si il y a une erreur, la mise à jour a échouée
                 } else {
                     return next(new HttpError ("erreur, mise à jour du mot de passe échouée", 500));
@@ -124,11 +139,11 @@ exports.deleteUser = (req, res, next) => {
     //Récupération de l'id de l'utilisateur ayant émis cette requête
     const user = userId(req.headers.authorization);
     //Si c'est bien le même utilisateur qui fait la demande
-    if(user === Number(req.params.id)) {
+    if(user.id === Number(req.params.id)) {
         //Création des requêtes sql
         const stringForFile = "SELECT photo_url FROM users WHERE id = ?;";
         const string = "DELETE FROM users WHERE id = ?;";
-        const inserts = user;
+        const inserts = user.id;
         const sqlForFile = mysql.format(stringForFile, inserts);
         const sql = mysql.format(string, inserts);
         //Requête sql pour récupérer le nom de la photo de l'utilisateur à supprimer
