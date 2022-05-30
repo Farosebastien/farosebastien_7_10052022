@@ -6,6 +6,8 @@ const mysql = require("mysql");
 const HttpError = require("../models/http-error");
 //Database
 const db = require("../config/mySqlDB");
+//Regex de contôle des injections sql
+const regExInjection = /DROP|TABLE|ALTER/m;
 //Récupération de l'id utilisateur par le token
 function userId(auth) {
     const token = auth.split(" ")[1];
@@ -23,13 +25,20 @@ exports.createPost = (req, res, next) => {
     const user = userId(req.headers.authorization);
     //Récupération du contenu de la requête et de l'eventuelle image
     const content  = req.body.content;
+    let validContent;
     let imageUrl;
+    //Validation de content contre les injections sql
+    if (String(content).match(regExInjection) == null) {
+        validContent = content;
+    } else {
+        return next(new HttpError("requête non autorisée", 403));
+    }
     if (req.file) {
         imageUrl = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
     }
     //Création de la requête sql
     const string = "INSERT INTO posts (users_id, content, image_url) VALUES (?, ?, ?);";
-    const inserts = [user.id, content, imageUrl];
+    const inserts = [user.id, validContent, imageUrl];
     const sql = mysql.format(string, inserts);
     //Requête sql pour envoyer le post dans la DB
     db.query(sql, (error, post) => {
@@ -45,117 +54,45 @@ exports.createPost = (req, res, next) => {
 };
 //Création d'une nouvelle réaction
 exports.postReaction = (req, res, next) => {
-    //Variables likes et dislikes
-    let likes = 0;
-    let dislikes = 0;
     //récupération de l'id utilisateur
     const user = userId(req.headers.authorization);
     //Récupération du contenu de la requête
-    const { reaction, post_id } = req.body;
-    const getReactions = (post_id, user_id) => {
-        return new Promise((resolve, reject) => {
-            try {
-                const string = "SELECT likes, dislikes FROM reactions WHERE posts_id = ? AND users_id = ?;";
-                const inserts = [post_id, user_id];
-                const sql = mysql.format(string, inserts);
-                db.query(sql, (error, results) => {
-                    if(!error) {
-                        resolve ({
-                            likes: results[0].likes,
-                            dislikes: results[0].dislikes
-                        });
-                    }
-                })
-            } catch (err) {
-                reject(err);
+    const { post_id, reaction } = req.body;
+    //Si la réaction est un like
+    if (reaction == 1) {
+        //Création de la requête pour envoyer ce nouveau like sur la DB
+        const string = "INSERT INTO reactions (likes, dislikes, users_id, posts_id) VALUES (1, 0, ?, ?);";
+        const inserts = [user.id, post_id];
+        const sql = mysql.format(string, inserts);
+        //Requête sql
+        db.query(sql, (error, result) => {
+            if (!error) {
+                res.status(201).json({ 
+                    message: "like ajouté",
+                    token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+            });
+            } else {
+                return next(new HttpError("erreur lors de l'ajout du like", 400));
             }
         });
-    };
-    getReactions(post_id, user.id)
-        .then((reactions) => {
-            //Si la réaction est un like
-            if (reaction > 0) {
-                // Si il y a déjà des likes sur ce post
-                if (reactions.likes != null) {
-                    //Ajout du nouveau like
-                    likes = reactions.likes + 1;
-                    //Création de la requête pour envoyer la nouvelle valeur de likes sur la DB
-                    const string = "UPDATE reactions SET likes = ? WHERE posts_id = ? AND users_id = ?;";
-                    const inserts = [likes, post_id, user.id];
-                    const sql = mysql.format(string, inserts);
-                    //Requête sql
-                    db.query(sql, (error, result) => {
-                        if (!error) {
-                        res.status(201).json({ 
-                                message: "like ajouté",
-                                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
-                            });
-                        } else {
-                            return next(new HttpError("erreur lors de l'ajout du like", 400));
-                        }
-                    });
-                //Si c'est le premier like sur ce post
-                } else {
-                    //Création de la requête pour envoyer ce nouveau like sur la DB
-                    const string = "INSERT INTO reactions (likes, users_id, posts_id) VALUES (1, ?, ?);";
-                    const inserts = [user.id, post_id];
-                    const sql = mysql.format(string, inserts);
-                    //Requête sql
-                    db.query(sql, (error, result) => {
-                        if (!error) {
-                            res.status(201).json({ 
-                                message: "like ajouté",
-                                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
-                        });
-                        } else {
-                            return next(new HttpError("erreur lors de l'ajout du like", 400));
-                        }
-                    });
-                }  
-            //Si la réaction est un dislike
-            } else if (reaction < 0) {
-                if (reactions.dislikes != null) {
-                    //Ajout du nouveau dislike
-                    dislikes = reactions.dislikes + 1;
-                    //Création de la requête pour envoyer la nouvelle valeur de dislikes sur la DB
-                    const string = "UPDATE reactions SET dislikes = ? WHERE posts_id = ? AND users_id = ?;";
-                    const inserts = [dislikes, post_id, user.id];
-                    const sql = mysql.format(string, inserts);
-                    //Requête sql
-                    db.query(sql, (error, result) => {
-                        if(!error) {
-                            res.status(201).json({ 
-                                message: "dislike ajouté",
-                                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
-                            });
-                        } else {
-                            return next(new HttpError("erreur lors de l'ajout du like", 400));
-                        }
-                    });
-                //Si c'est le premier dislike sur ce post
-                } else {
-                    //Création de la requête pour envoyer ce nouveau dislike sur la DB
-                    const string = "INSERT INTO reactions (dislikes, user_id, post_id) VALUES (1, ?, ?);";
-                    const inserts = [user.id, post_id];
-                    const sql = mysql.format(string, inserts);
-                    //Requête sql
-                    db.query(sql, (error, result) => {
-                        if(!error) {
-                            res.status(201).json({ 
-                                message: "dislike ajouté",
-                                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
-                            });
-                        } else {
-                            return next(new HttpError("erreur lors de l'ajout du like", 400));
-                        }
-                    });
-                }
+    //Si la réaction est un dislike
+    } else {
+        //Création de la requête pour envoyer ce nouveau dislike sur la DB
+        const string = "INSERT INTO reactions (dislikes, likes, users_id, posts_id) VALUES (1, 0, ?, ?);";
+        const inserts = [user.id, post_id];
+        const sql = mysql.format(string, inserts);
+        //Requête sql
+        db.query(sql, (error, result) => {
+            if(!error) {
+                res.status(201).json({ 
+                    message: "dislike ajouté",
+                    token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                });
+            } else {
+                return next(new HttpError("erreur lors de l'ajout du dislike", 400));
             }
-        })
-        .catch((error) => {
-            return next(new HttpError("erreur de requête", 500));
         });
-    
+    }
 };
 //Création d'un nouveau commentaire
 exports.postComment = (req, res, next) => {
@@ -163,9 +100,16 @@ exports.postComment = (req, res, next) => {
     const user = userId(req.headers.authorization);
     //Récupérarion du contenu de la requête
     const { post_id, content } = req.body;
+    let validContent;
+    //Validation de content contre les injections sql
+    if (String(content).match(regExInjection) == null) {
+        validContent = content;
+    } else {
+        return next(new HttpError("requête non autorisée", 403));
+    }
     //Création de la requête pour envoyé le commentaire dans la DB
     const string = "INSERT INTO comments (users_id, posts_id, content) VALUES (?, ?, ?);";
-    const inserts = [user.id, post_id, content];
+    const inserts = [user.id, post_id, validContent];
     const sql = mysql.format(string, inserts);
     //Requête sql
     db.query(sql, (error, commentId) => {
@@ -199,7 +143,7 @@ exports.getAllPosts = (req, res, next) => {
         return new Promise ((resolve, reject) => {
             try {
                 //Création de la requête de récupération des posts qui les ordonne suivant leur date de modification
-                const string = "SELECT u.id AS user_id, u.username, u.photo_url, p.content, p.post_date, p.modification_date, p.image_url, p.id AS post_id, r.likes AS likes, r.dislikes AS dislikes, (SELECT likes FROM reactions WHERE user_id = ? AND posts_id = r.posts_id) AS userlikes FROM posts AS p LEFT JOIN reactions AS r ON p.id = r.posts_id JOIN users AS u ON p.users_id = u.id GROUP BY p.id ORDER BY creation_date DESC;";
+                const string = "SELECT u.id AS user_id, u.username, u.photo_url, p.content, p.post_date, p.modification_date, p.image_url, p.id AS post_id, r.likes AS likes, r.dislikes AS dislikes, (SELECT likes FROM reactions WHERE user_id = ? AND posts_id = r.posts_id) AS userlikes FROM posts AS p LEFT JOIN reactions AS r ON p.id = r.posts_id JOIN users AS u ON p.users_id = u.id GROUP BY p.id ORDER BY post_date DESC;";
                 const inserts = [user.id];
                 const sql = mysql.format(string, inserts);
                 //Requête sql
@@ -279,7 +223,7 @@ exports.getMostLikedPosts = (req, res, next) => {
         return new Promise((resolve, reject) => {
             try {
                 //Création de la requête de récupération des posts qui les ordonne suivant leur nombre de likes
-                const string = "SELECT u.id AS user_id, u.username, u.photo_url, p.content, p.post_date, p.modification_date, p.image_url, p.id AS post_id, r.likes AS likes, r.dislikes AS dislikes, (SELECT likes FROM reactions WHERE users-id = ? ADN posts_id = r.posts_id) AS userlikes FROM posts AS p LEFT JOIN reactions AS r ON p.id = r.posts_id JOIN users AS u ON p.users_id = u.id GROUP BY p.id ORDER BY likes DESC;";
+                const string = "SELECT u.id AS user_id, u.username, u.photo_url, p.content, p.post_date, p.modification_date, p.image_url, p.id AS post_id, r.likes AS likes, r.dislikes AS dislikes, (SELECT likes FROM reactions WHERE users_id = ? AND posts_id = r.posts_id) AS userlikes FROM posts AS p LEFT JOIN reactions AS r ON p.id = r.posts_id JOIN users AS u ON p.users_id = u.id GROUP BY p.id ORDER BY likes DESC;";
                 const inserts = [user.id];
                 const sql = mysql.format(string, inserts);
                 //Requête sql
@@ -384,7 +328,16 @@ exports.updatePost = (req, res, next) => {
     const postId = req.params.id;
     //Récupération du contenu de la requête venant du front
     const postContent = req.body.content;
+    let validPostContent;
     let image_url;
+    let validImage_url;
+    let sql;
+    //Validation de content contre les injections sql
+    if (String(postContent).match(regExInjection) == null) {
+        validPostContent = postContent;
+    } else {
+        return next(new HttpError("requête non autorisée", 403));
+    }
     //Si il n'y a pas d'image on laisse à null
     if (req.body.image === "null") {
         image_url;
@@ -393,12 +346,25 @@ exports.updatePost = (req, res, next) => {
         image_url = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
     //Si l'image ne change pas
     } else {
-        image_url = req.body.photo_url;
+        //Validation de image_url contre les injections sql
+        validImage_url = req.body.image_url;
+        if (String(validImage_url).match(regExInjection) == null) {
+            image_url = validImage_url;
+        } else {
+            return next(new HttpError("requête non autorisée", 403));
+        }
     }
-    //Création de la requête de mise à jour du post
-    const string = "UPDATE posts SET content = ?, image_url = ? WHERE id = ? AND users_id = ?;";
-    const inserts = [postContent, image_url, postId, user.id];
-    const sql = mysql.format(string, inserts);
+    if (validPostContent != null) {
+        //Création de la requête de mise à jour du post avec content
+        const string = "UPDATE posts SET content = ?, image_url = ? WHERE id = ? AND users_id = ?;";
+        const inserts = [validPostContent, image_url, postId, user.id];
+        sql = mysql.format(string, inserts);
+    } else {
+        //Création de la requête de mise à jour du post sans modifier le content
+        const string = "UPDATE posts SET image_url = ? WHERE id = ? AND users_id = ?;";
+        const inserts = [image_url, postId, user.id];
+        sql = mysql.format(string, inserts);
+    }
     //Requête sql
     db.query(sql, (error, result) => {
         if(!error) {
@@ -418,8 +384,15 @@ exports.updateComment = (req, res, next) => {
     const user = userId(req.headers.authorization);
     //Récupération de l'id du commentaire à mettre à jour
     const commentId = req.params.comments_id;
-    //Récupération du contenu de la requ^te venant du front
+    //Récupération du contenu de la requête venant du front
     const comment = req.body.content;
+    let validComment;
+    //Validation de comment contre les injections sql
+    if (String(comment).match(regExInjection) == null) {
+        validComment = comment;
+    } else {
+        return next(new HttpError("requête non autorisée", 403));
+    }
     //Création de la requête de mise à jour du commentaire
     const string = "UPDATE comments SET content = ? WHERE comments_id = ? AND users_id = ?;";
     const inserts  = [comment, commentId, user.id];
@@ -462,8 +435,8 @@ exports.deleteComment = (req, res, next) => {
         //Si rôle n'est pas à null alors c'est un admin
         if (result[0].role == 1) {
             //Si c'est un admin, création de la requête de suppression du commentaire 
-            string = "DELETE FROM posts WHERE id = ?;";
-            inserts = [req.params.id];
+            string = "DELETE FROM comments WHERE comments_id = ?;";
+            inserts = [req.params.comments_id];
             const sql = mysql.format(string, inserts);
             //Requête sql
             db.query(sql, (error, result) => {
@@ -480,7 +453,7 @@ exports.deleteComment = (req, res, next) => {
             });
         //Sinon, création de la requête de suppression du commentaire en fonction de l'id utilisateur
         } else {
-            string = "DELETE FROM posts WHERE id = ? AND users_id = ?;";
+            string = "DELETE FROM comments WHERE comments_id = ? AND users_id = ?;";
             inserts = [req.params.id, user.id];
             const sql = mysql.format(string, inserts);
             //Requête sql

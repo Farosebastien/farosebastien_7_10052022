@@ -20,6 +20,8 @@ validation
 .has().not().spaces();
 //Regex de contrôle des entrées
 const regEx = /^[A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ '\-]+$/i;
+//Regex de contôle des injections sql
+const regExInjection = /DROP|TABLE|ALTER/m;
 //Récupération de l'id utilisateur par le token
 function userId(auth) {
     const token = auth.split(" ")[1];
@@ -37,7 +39,7 @@ exports.getUser = (req, res, next) => {
     const user = userId(req.headers.authorization);
     //Création de la requête sql
     const string = "SELECT firstname, lastname, username, email, role, photo_url FROM users WHERE id = ?;";
-    const inserts = req.params.id;
+    const inserts = [req.params.id];
     const sql = mysql.format(string, inserts);
     //Requête sql et récupération dans la DB 
     db.query(sql, (error, profile) => {
@@ -58,6 +60,7 @@ exports.updateUser = (req, res, next) => {
     const user = userId(req.headers.authorization);
     const { firstname, lastname, username, email } = req.body;
     let photo_url;
+    let validPhoto_url;
     //Si il n'y a pas d'image on laisse à null
     if (req.body.image === "null") {
         photo_url;
@@ -66,13 +69,31 @@ exports.updateUser = (req, res, next) => {
         photo_url = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
     //Si l'image ne change pas
     } else {
-        photo_url = req.body.photo_url;
+        //Validation de image_url contre les injections sql
+        validPhoto_url = req.body.photo_url;
+        if (String(validPhoto_url).match(regExInjection) == null) {
+            photo_url = validPhoto_url;
+        } else {
+            return next(new HttpError("requête non autorisée", 403));
+        }
     }
     //Validation des entrées de l'utilisateur 
-    const isFirstnameValid = validator.matches(firstname, regEx);
-    const isLastnameValid = validator.matches(lastname, regEx);
-    const isUsernameValid = validator.matches(username, regEx);
-    const isEmailValid = validator.isEmail(email);
+    let isFirstnameValid = validator.matches(firstname, regEx);
+    if (firstname.match(regExInjection != null)) {
+        isFirstnameValid = false;
+    }
+    let isLastnameValid = validator.matches(lastname, regEx);
+    if (lastname.match(regExInjection) != null) {
+        isLastnameValid = false;
+    }
+    let isUsernameValid = validator.matches(username, regEx);
+    if (username.match(regExInjection) != null) {
+        isUsernameValid = false;
+    }
+    let isEmailValid = validator.isEmail(email);
+    if (email.match(regExInjection) != null) {
+        isEmailValid = false;
+    }
     //Si toutes les entrées sont valides
     if(isFirstnameValid && isLastnameValid && isUsernameValid && isEmailValid) {
         //Création de la requête sql
@@ -107,9 +128,9 @@ exports.updateUser = (req, res, next) => {
 exports.updateUserPassword = (req, res, next) => {
     //Récupération de la requête venant du front et de l'id de l'utilisateur ayant émis cette requête
     const user = userId(req.headers.authorization);
-    const {password} = req.body;
+    const { password } = req.body;
     //si le password est valide
-    if(validation.validate(password)) {
+    if(validation.validate(password) && password.match(regExInjection) == null) {
         //Cryptage du mot de passe
         bcrypt.hash(req.body.password, 10).then((hash) => {
             //Création de la requête sql

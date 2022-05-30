@@ -8,6 +8,8 @@ const passwordValidator = require("password-validator");
 const HttpError = require("../models/http-error");
 //Database
 const db = require("../config/mySqlDB");
+//Regex de contôle des injections sql
+const regExInjection = /DROP|TABLE|ALTER/m;
 //Options de validation du password
 const validation = new passwordValidator();
 validation
@@ -24,7 +26,7 @@ exports.login = (req, res, next) => {
     //Validation des entrées de l'utilisateur
     if (!email && !password) {
         return next(new HttpError("veuillez renseigner vos identifiants", 400));
-    } else if (!validator.matches(String(email)) && !validation.validate(String(password))) {
+    } else if (!validator.matches(String(email)) && !validation.validate(String(password)) && String(email).match(regExInjection) != null && String(password).match(regExInjection) != null) {
         return next(new HttpError("vos identifiant ne sont pas un email et un password correct", 400));
     }
     //Si il manque l'email
