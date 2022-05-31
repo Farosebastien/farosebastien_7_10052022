@@ -61,7 +61,7 @@ exports.postReaction = (req, res, next) => {
     //Si la réaction est un like
     if (reaction == 1) {
         //Création de la requête pour envoyer ce nouveau like sur la DB
-        const string = "INSERT INTO reactions (likes, dislikes, users_id, posts_id) VALUES (1, 0, ?, ?);";
+        const string = "INSERT INTO reactions (likes, users_id, posts_id) VALUES (1, ?, ?);";
         const inserts = [user.id, post_id];
         const sql = mysql.format(string, inserts);
         //Requête sql
@@ -78,7 +78,7 @@ exports.postReaction = (req, res, next) => {
     //Si la réaction est un dislike
     } else {
         //Création de la requête pour envoyer ce nouveau dislike sur la DB
-        const string = "INSERT INTO reactions (dislikes, likes, users_id, posts_id) VALUES (1, 0, ?, ?);";
+        const string = "INSERT INTO reactions (dislikes, users_id, posts_id) VALUES (1, ?, ?);";
         const inserts = [user.id, post_id];
         const sql = mysql.format(string, inserts);
         //Requête sql
@@ -143,8 +143,8 @@ exports.getAllPosts = (req, res, next) => {
         return new Promise ((resolve, reject) => {
             try {
                 //Création de la requête de récupération des posts qui les ordonne suivant leur date de modification
-                const string = "SELECT u.id AS user_id, u.username, u.photo_url, p.content, p.post_date, p.modification_date, p.image_url, p.id AS post_id, r.likes AS likes, r.dislikes AS dislikes, (SELECT likes FROM reactions WHERE user_id = ? AND posts_id = r.posts_id) AS userlikes FROM posts AS p LEFT JOIN reactions AS r ON p.id = r.posts_id JOIN users AS u ON p.users_id = u.id GROUP BY p.id ORDER BY post_date DESC;";
-                const inserts = [user.id];
+                const string = "SELECT users.id, username, photo_url, posts.id AS post, content, image_url, post_date, modification_date FROM users INNER JOIN posts on users.id = posts.users_id ORDER BY post_date DESC;";
+                const inserts = [];
                 const sql = mysql.format(string, inserts);
                 //Requête sql
                 db.query(sql, (error, posts) => {
@@ -160,7 +160,7 @@ exports.getAllPosts = (req, res, next) => {
             }
         });
     };
-    //Fonction d'ajout des commentaire en fonction de chaque post
+    //Fonction d'ajout du nombre de commentaire en fonction de chaque post
     const getCommentCount = (post_id) => {
         return new Promise((resolve, reject) => {
             try {
@@ -182,17 +182,151 @@ exports.getAllPosts = (req, res, next) => {
             }
         });
     };
+    //Fonction d'ajout du nombre de likes en fonction de chaque post
+    const getLikesCount = (post_id) => {
+        return new Promise((resolve, reject) => {
+            try {
+                //Création de la requête
+                const string ="SELECT COUNT(likes) as likes FROM reactions WHERE posts_id = ?;";
+                const inserts = [post_id];
+                const sql = mysql.format(string, inserts);
+                //Requête sql
+                db.query(sql, (error, likes) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(likes[0].likes);
+                    }
+                });
+            //Si il y a une erreur
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
+    //Fonction d'ajout du nombre de dislikes en fonction de chaque post
+    const getDislikesCount = (post_id) => {
+        return new Promise((resolve, reject) => {
+            try {
+                //Création de la requête
+                const string ="SELECT COUNT(dislikes) as dislikes FROM reactions WHERE posts_id = ?;";
+                const inserts = [post_id];
+                const sql = mysql.format(string, inserts);
+                //Requête sql
+                db.query(sql, (error, dislikes) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(dislikes[0].dislikes);
+                    }
+                });
+            //Si il y a une erreur
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
+    //Fonction de vérification si l'utilisateur à liké le post courant
+    const getIsLiked = (post_id, user_id) => {
+        return new Promise((resolve, reject) => {
+            try {
+                //Création de la requête
+                const string ="SELECT likes FROM reactions WHERE posts_id = ? AND users_id = ?;";
+                const inserts = [post_id, user_id];
+                const sql = mysql.format(string, inserts);
+                //Requête sql
+                db.query(sql, (error, likes) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(likes);
+                    }
+                });
+            //Si il y a une erreur
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
+    //Fonction de vérification si l'utilisateur à liké le post courant
+    const getIsDisliked = (post_id, user_id) => {
+        return new Promise((resolve, reject) => {
+            try {
+                //Création de la requête
+                const string ="SELECT dislikes FROM reactions WHERE posts_id = ? AND users_id = ?;";
+                const inserts = [post_id, user_id];
+                const sql = mysql.format(string, inserts);
+                //Requête sql
+                db.query(sql, (error, dislikes) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(dislikes);
+                    }
+                });
+            //Si il y a une erreur
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
     //Fonction asynchrone qui recupère tout les posts dans un array et qui boucle dessus afin d'ajouter tout les commentaires de chaque posts
     const composePost = async () => {
         try {
             //Appel de la fonction getPosts
             let posts = await getPosts();
-            //Boucle qui itère sur chaque post
+            //Boucles qui itère sur chaque post
             for (let i = 0; i < posts.length; i++) {
                 //Appel de la fonction getCommentCount sur chaque post
-                const comments = await getCommentCount(posts[i].posts_id);
+                const comments = await getCommentCount(posts[i].post);
                 //Ajout des commentaires
                 posts[i].comments = comments;
+                //Appel de la fonction getLikesCount sur chaque post
+                const likes = await getLikesCount(posts[i].post);
+                //Ajout des likes
+                posts[i].likes = likes;
+                //Appel de la fonction getDislikesCount sur chaque post
+                const dislikes = await getDislikesCount(posts[i].post);
+                //Ajout des dislikes
+                posts[i].dislikes = dislikes;
+                //Appel de la fonction getIsLiked sur chaque post
+                const liked = await getIsLiked(posts[i].post, user.id);
+                //Si l'utilisateur a réagi à ce post
+                if(liked) {
+                    if(liked.length > 0) {
+                        //Si c'est bien un like
+                        if (liked[0].likes == 1) {
+                            //Mise à true du booléen
+                            posts[i].liked = true;
+                        //Sinon mise à false
+                        } else {
+                            posts[i].liked = false;
+                        } 
+                    } else {
+                        posts[i].liked = false;
+                    }
+                } else {
+                    posts[i].liked = false;
+                }
+                //Appel de la fonction getIsDisliked sur chaque post
+                const disliked = await getIsDisliked(posts[i].post, user.id);
+                //Si l'utilisateur a réagi à ce post
+                if(disliked) {
+                    if(disliked.length > 0) {
+                        //Si c'est bien un like
+                        if (disliked[0].dislikes == 1) {
+                            //Mise à true du booléen
+                            posts[i].disliked = true;
+                        //Sinon mise à false
+                        } else {
+                            posts[i].disliked = false;
+                        } 
+                    } else {
+                        posts[i].disliked = false;
+                    }
+                } else {
+                    posts[i].disliked = false;
+                }
             }
             return posts;
         //Si il y a une erreur
@@ -219,12 +353,12 @@ exports.getMostLikedPosts = (req, res, next) => {
     //Récupération de l'id utilisateur
     const user = userId(req.headers.authorization);
     //Fonction de récupération des posts et jonction des likes et dislikes en fonction des utilisateurs
-    const getMostliked = () => {
-        return new Promise((resolve, reject) => {
+    const getPosts = () => {
+        return new Promise ((resolve, reject) => {
             try {
-                //Création de la requête de récupération des posts qui les ordonne suivant leur nombre de likes
-                const string = "SELECT u.id AS user_id, u.username, u.photo_url, p.content, p.post_date, p.modification_date, p.image_url, p.id AS post_id, r.likes AS likes, r.dislikes AS dislikes, (SELECT likes FROM reactions WHERE users_id = ? AND posts_id = r.posts_id) AS userlikes FROM posts AS p LEFT JOIN reactions AS r ON p.id = r.posts_id JOIN users AS u ON p.users_id = u.id GROUP BY p.id ORDER BY likes DESC;";
-                const inserts = [user.id];
+                //Création de la requête de récupération des posts qui les ordonne suivant leur date de modification
+                const string = "SELECT users.id, username, photo_url, posts.id AS post, content, image_url, post_date, modification_date FROM users INNER JOIN posts on users.id = posts.users_id ORDER BY post_date DESC;";
+                const inserts = [];
                 const sql = mysql.format(string, inserts);
                 //Requête sql
                 db.query(sql, (error, posts) => {
@@ -238,14 +372,14 @@ exports.getMostLikedPosts = (req, res, next) => {
             } catch (err) {
                 reject(err);
             }
-       });
+        });
     };
-    //Fonction d'ajout des commentaire en fonction de chaque post
+    //Fonction d'ajout du nombre de commentaire en fonction de chaque post
     const getCommentCount = (post_id) => {
         return new Promise((resolve, reject) => {
             try {
                 //Création de la requête
-                const string = "SELECT COUNT(*) as comments FROM comments WHERE posts_id = ?;";
+                const string ="SELECT COUNT(*) as comments FROM comments WHERE posts_id = ?;";
                 const inserts = [post_id];
                 const sql = mysql.format(string, inserts);
                 //Requête sql
@@ -262,18 +396,156 @@ exports.getMostLikedPosts = (req, res, next) => {
             }
         });
     };
+    //Fonction d'ajout du nombre de likes en fonction de chaque post
+    const getLikesCount = (post_id) => {
+        return new Promise((resolve, reject) => {
+            try {
+                //Création de la requête
+                const string ="SELECT COUNT(likes) as likes FROM reactions WHERE posts_id = ?;";
+                const inserts = [post_id];
+                const sql = mysql.format(string, inserts);
+                //Requête sql
+                db.query(sql, (error, likes) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(likes[0].likes);
+                    }
+                });
+            //Si il y a une erreur
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
+    //Fonction d'ajout du nombre de dislikes en fonction de chaque post
+    const getDislikesCount = (post_id) => {
+        return new Promise((resolve, reject) => {
+            try {
+                //Création de la requête
+                const string ="SELECT COUNT(dislikes) as dislikes FROM reactions WHERE posts_id = ?;";
+                const inserts = [post_id];
+                const sql = mysql.format(string, inserts);
+                //Requête sql
+                db.query(sql, (error, dislikes) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(dislikes[0].dislikes);
+                    }
+                });
+            //Si il y a une erreur
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
+    //Fonction de vérification si l'utilisateur à liké le post courant
+    const getIsLiked = (post_id, user_id) => {
+        return new Promise((resolve, reject) => {
+            try {
+                //Création de la requête
+                const string ="SELECT likes FROM reactions WHERE posts_id = ? AND users_id = ?;";
+                const inserts = [post_id, user_id];
+                const sql = mysql.format(string, inserts);
+                //Requête sql
+                db.query(sql, (error, likes) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(likes);
+                    }
+                });
+            //Si il y a une erreur
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
+    //Fonction de vérification si l'utilisateur à liké le post courant
+    const getIsDisliked = (post_id, user_id) => {
+        return new Promise((resolve, reject) => {
+            try {
+                //Création de la requête
+                const string ="SELECT dislikes FROM reactions WHERE posts_id = ? AND users_id = ?;";
+                const inserts = [post_id, user_id];
+                const sql = mysql.format(string, inserts);
+                //Requête sql
+                db.query(sql, (error, dislikes) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(dislikes);
+                    }
+                });
+            //Si il y a une erreur
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
     //Fonction asynchrone qui recupère tout les posts dans un array et qui boucle dessus afin d'ajouter tout les commentaires de chaque posts
     const composePost = async () => {
         try {
             //Appel de la fonction getPosts
-            let posts = await getMostliked();
-            //Boucle qui itère sur chaque post
-            for(let i = 0; i < posts.length; i++) {
+            let posts = await getPosts();
+            //Boucles qui itère sur chaque post
+            for (let i = 0; i < posts.length; i++) {
                 //Appel de la fonction getCommentCount sur chaque post
-                const comments = await getCommentCount(posts[i].post_id);
+                const comments = await getCommentCount(posts[i].post);
                 //Ajout des commentaires
                 posts[i].comments = comments;
+                //Appel de la fonction getLikesCount sur chaque post
+                const likes = await getLikesCount(posts[i].post);
+                //Ajout des likes
+                posts[i].likes = likes;
+                //Appel de la fonction getDislikesCount sur chaque post
+                const dislikes = await getDislikesCount(posts[i].post);
+                //Ajout des dislikes
+                posts[i].dislikes = dislikes;
+                //Appel de la fonction getIsLiked sur chaque post
+                const liked = await getIsLiked(posts[i].post, user.id);
+                //Si l'utilisateur a réagi à ce post
+                if(liked) {
+                    if(liked.length > 0) {
+                        //Si c'est bien un like
+                        if (liked[0].likes == 1) {
+                            //Mise à true du booléen
+                            posts[i].liked = true;
+                        //Sinon mise à false
+                        } else {
+                            posts[i].liked = false;
+                        } 
+                    } else {
+                        posts[i].liked = false;
+                    }
+                } else {
+                    posts[i].liked = false;
+                }
+                //Appel de la fonction getIsDisliked sur chaque post
+                const disliked = await getIsDisliked(posts[i].post, user.id);
+                //Si l'utilisateur a réagi à ce post
+                if(disliked) {
+                    if(disliked.length > 0) {
+                        //Si c'est bien un like
+                        if (disliked[0].dislikes == 1) {
+                            //Mise à true du booléen
+                            posts[i].disliked = true;
+                        //Sinon mise à false
+                        } else {
+                            posts[i].disliked = false;
+                        } 
+                    } else {
+                        posts[i].disliked = false;
+                    }
+                } else {
+                    posts[i].disliked = false;
+                }
             }
+            posts.sort(function compare(a, b) {
+                return a.likes - b.likes;
+            });
+            posts.reverse();
             return posts;
         //Si il y a une erreur
         } catch (err) {
@@ -301,14 +573,16 @@ exports.getOnePost = (req, res, next) => {
     const user = userId(req.headers.authorization);
     //Récupération de l'id du post à récupérer
     const postId = req.params.id;
-    //Création des requête de récupération du post correspondant et de ses commentaires
-    const stringForPost = "SELECT u.id AS users_id, u.firstname, u.lastname, u.username, u.photo_url, p.content, p.post_date, p.modification_date, p.id AS post_id, r.likes AS likes, r.dislikes AS dislikes, (SELECT likes FROM reactions WHERE users_id = ? AND posts_id = r.posts_id) AS userlikes FROM posts AS p LEFT JOIN reactions AS r ON p.id = r.posts_id JOIN users AS u ON p.users_id = u.id WHERE p.id = ? GROUP BY p.id;";
-    const stringForComment = "SELECT users.id AS users_id, users.firstname, users.lastname, users.photo_url, comments.comments_id, comments.comment_date, comments.modification_date, comments.content FROM comments INNER JOIN users ON comments.users_id = users.id WHERE posts_id = ?;";
+    //Création des requêtes de récupération du post correspondant, de ses commentaires et des utilisateurs qui ont réagi
+    const stringForPost = "SELECT u.id AS users_id, u.username, u.photo_url, p.content, p.image_url, p.post_date, p.modification_date, p.id AS post_id, (SELECT COUNT(likes) FROM reactions WHERE posts_id = r.posts_id) AS likes, (SELECT COUNT(dislikes) FROM reactions WHERE posts_id = r.posts_id) AS dislikes FROM posts AS p INNER JOIN reactions AS r ON p.id = r.posts_id INNER JOIN users AS u ON p.users_id = u.id WHERE p.id = ? GROUP BY p.id;";
+    const stringForComment = "SELECT users.id AS users_id, users.username, users.photo_url, comments.comments_id, comments.comment_date, comments.modification_date, comments.content FROM comments INNER JOIN users ON comments.users_id = users.id WHERE posts_id = ?;";
+    const stringForLikers = "SELECT users.username FROM reactions INNER JOIN users ON reactions.users_id = users.id WHERE posts_id = ? AND likes = 1;";
+    const stringForDislikers = "SELECT users.username FROM reactions INNER JOIN users on reactions.users_id = users.id WHERE posts_id = ? AND dislikes = 1;";
     //Requête sql
-    db.query(`${stringForPost} ${stringForComment}`, [user.id, postId, postId], (error, result, fields) => {
+    db.query(`${stringForPost} ${stringForComment} ${stringForLikers} ${stringForDislikers}`, [postId, postId, postId, postId], (error, result, fields) => {
         if(!error) {
             //Récupération et envoi des résultat de la requête
-            const results = [{...result[0][0], commentsCounter: result[1].length},{comments: [...result[1]]}];
+            const results = [{...result[0][0], commentsCounter: result[1].length, usersLikedId: [...result[2]], usersDislikesId: [...result[3]]},{comments: [...result[1]]}];
             res.status(200).json({
                 post: results,
                 token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
@@ -395,7 +669,7 @@ exports.updateComment = (req, res, next) => {
     }
     //Création de la requête de mise à jour du commentaire
     const string = "UPDATE comments SET content = ? WHERE comments_id = ? AND users_id = ?;";
-    const inserts  = [comment, commentId, user.id];
+    const inserts  = [validComment, commentId, user.id];
     const sql = mysql.format(string, inserts);
     //Requête sql de mise à jour
     db.query(sql, (error, result) => {
@@ -576,5 +850,24 @@ exports.deletePost = (req, res, next) => {
                 }
             });
         }
+    });
+};
+exports.deleteReaction = (req, res, next) => {
+    const user = userId(req.headers.authorization);
+    const  postId  = req.body.posts_id;
+    const string = "DELETE FROM reactions WHERE posts_id = ? AND users_id = ?;";
+    const inserts = [postId, user.id];
+    const sql = mysql.format(string, inserts);
+    console.log(postId);
+    console.log(user.id)
+    db.query(sql, (error, result) => {
+        if(!error) {
+            res.status(200).json({
+                message: "réaction supprimée",
+                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+            });
+        } else {
+            return next(new HttpError("erreur lors de la suppression de la réaction", 400));
+        };
     });
 };
