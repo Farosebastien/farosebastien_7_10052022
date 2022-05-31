@@ -852,20 +852,25 @@ exports.deletePost = (req, res, next) => {
         }
     });
 };
+//Suppression d'une réaction
 exports.deleteReaction = (req, res, next) => {
+    //Récupération de l'id de l'utilisateur 
     const user = userId(req.headers.authorization);
-    const  postId  = req.body.posts_id;
+    //Récupération de l'id du post venant du front
+    const postId = req.body.posts_id;
+    //Création de la requête sql
     const string = "DELETE FROM reactions WHERE posts_id = ? AND users_id = ?;";
     const inserts = [postId, user.id];
     const sql = mysql.format(string, inserts);
-    console.log(postId);
-    console.log(user.id)
+    //Requête sql
     db.query(sql, (error, result) => {
+        //Si il n'y a pas d'erreur, envoie d'un nouveau token
         if(!error) {
             res.status(200).json({
                 message: "réaction supprimée",
                 token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
             });
+        //Si il y a une erreur, un message est affiché
         } else {
             return next(new HttpError("erreur lors de la suppression de la réaction", 400));
         };
