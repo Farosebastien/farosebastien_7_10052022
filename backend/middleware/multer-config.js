@@ -24,7 +24,7 @@ const fileFilter = (req, file, callback) => {
     if(ext === "jpg" || ext === "png" || ext === "gif") {
         callback(null, true);
     } else {
-        callback(new Error ("Mauvais format de fichiers"), false);
+        callback(new Error ("Mauvais format de fichier"), false);
     }
 }
 //Exportation de multer avec l'objet, une limite à 80mo par fichier et le filtre d'extension
