@@ -280,7 +280,7 @@ exports.getAllPosts = (req, res, next) => {
                 //Appel de la fonction getCommentCount sur chaque post
                 const comments = await getCommentCount(posts[i].post);
                 //Ajout des commentaires
-                posts[i].comments = comments;
+                posts[i].commentsCounter = comments;
                 //Appel de la fonction getLikesCount sur chaque post
                 const likes = await getLikesCount(posts[i].post);
                 //Ajout des likes
@@ -494,7 +494,7 @@ exports.getMostLikedPosts = (req, res, next) => {
                 //Appel de la fonction getCommentCount sur chaque post
                 const comments = await getCommentCount(posts[i].post);
                 //Ajout des commentaires
-                posts[i].comments = comments;
+                posts[i].commentsCounter = comments;
                 //Appel de la fonction getLikesCount sur chaque post
                 const likes = await getLikesCount(posts[i].post);
                 //Ajout des likes
@@ -576,13 +576,26 @@ exports.getOnePost = (req, res, next) => {
     //Création des requêtes de récupération du post correspondant, de ses commentaires et des utilisateurs qui ont réagi
     const stringForPost = "SELECT u.id AS users_id, u.username, u.photo_url, p.content, p.image_url, p.post_date, p.modification_date, p.id AS post_id, (SELECT COUNT(likes) FROM reactions WHERE posts_id = r.posts_id) AS likes, (SELECT COUNT(dislikes) FROM reactions WHERE posts_id = r.posts_id) AS dislikes FROM posts AS p INNER JOIN reactions AS r ON p.id = r.posts_id INNER JOIN users AS u ON p.users_id = u.id WHERE p.id = ? GROUP BY p.id;";
     const stringForComment = "SELECT users.id AS users_id, users.username, users.photo_url, comments.comments_id, comments.comment_date, comments.modification_date, comments.content FROM comments INNER JOIN users ON comments.users_id = users.id WHERE posts_id = ?;";
-    const stringForLikers = "SELECT users.username FROM reactions INNER JOIN users ON reactions.users_id = users.id WHERE posts_id = ? AND likes = 1;";
-    const stringForDislikers = "SELECT users.username FROM reactions INNER JOIN users on reactions.users_id = users.id WHERE posts_id = ? AND dislikes = 1;";
+    const stringForLikers = "SELECT users.id, users.username FROM reactions INNER JOIN users ON reactions.users_id = users.id WHERE posts_id = ? AND likes = 1;";
+    const stringForDislikers = "SELECT users.id, users.username FROM reactions INNER JOIN users on reactions.users_id = users.id WHERE posts_id = ? AND dislikes = 1;";
     //Requête sql
     db.query(`${stringForPost} ${stringForComment} ${stringForLikers} ${stringForDislikers}`, [postId, postId, postId, postId], (error, result, fields) => {
         if(!error) {
+            //Test si l'utilisateur à liké ou disliké le post
+            let liked = false;
+            let disliked = false;
+            //Liked
+            for( let i = 0; i < result[2].length; i++) {
+                if(user.id == result[2][i].id)
+                liked = true;
+            }
+            //Disliked
+            for( let i = 0; i < result[3].length; i++) {
+                if(user.id == result[3][i].id)
+                disliked = true;
+            }
             //Récupération et envoi des résultat de la requête
-            const results = [{...result[0][0], commentsCounter: result[1].length, usersLikedId: [...result[2]], usersDislikesId: [...result[3]]},{comments: [...result[1]]}];
+            const results = [{...result[0][0], commentsCounter: result[1].length, liked: liked, disliked: disliked, usersLikedId: result[2], usersDislikesId: result[3]},{comments: result[1]}];
             res.status(200).json({
                 post: results,
                 token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})

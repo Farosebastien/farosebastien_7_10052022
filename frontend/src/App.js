@@ -14,12 +14,12 @@ const App = () => {
   if (token) {
     routes = (
       <Switch>
-        <Route path="/posts" exact component={Posts} />
-        <Route path="/posts/new" exact component={NewPost} />
+        <Route path="/post" exact component={Posts} />
+        <Route path="/post/new" exact component={NewPost} />
         <Route path="/menu" exact component={Menu} />
-        <Route path="/profile/:id" exact component={UserProfile} />
-        <Route path="/profile/:id/update" exact component={UpdateProfile} />
-        <Route path="/posts/:id" exact component={CommentPost} />
+        <Route path="/users/:id" exact component={UserProfile} />
+        <Route path="/users/:id/update" exact component={UpdateProfile} />
+        <Route path="/post/:id" exact component={CommentPost} />
       </Switch>
     );
   } else {

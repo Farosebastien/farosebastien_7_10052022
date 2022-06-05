@@ -55,7 +55,7 @@ exports.login = (req, res, next) => {
             }
             res.status(200).json({
                 userId: user[0].id,
-                role: !user[0].role ? "user" : "admin",
+                account: !user[0].role ? "user" : "admin",
                 token: jwt.sign({ userId: user[0].id, account: user[0].role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
             });
         });

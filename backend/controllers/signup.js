@@ -60,7 +60,7 @@ exports.signup = (req, res, next) => {
                     res.status(201).json({
                         message: "utilisateur créé",
                         userId: user.insertId,
-                        role: "user",
+                        account: "user",
                         token: jwt.sign({ userId: user.insertId, account: 0 }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
                     });
                 //Si il y a une erreur c'est que l'utilisateur est déjà existant
@@ -121,7 +121,7 @@ exports.signupAdmin = (req, res, next) => {
                     res.status(201).json({
                         message: "administrateur créé",
                         userId: user.insertId,
-                        role: "admin",
+                        account: "admin",
                         token: jwt.sign({ userId: user.insertId, account: 1 }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
                     });
                 //Si il y a une erreur c'est que l'utilisateur est déjà existant
