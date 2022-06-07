@@ -17,8 +17,8 @@ const App = () => {
         <Route path="/post" exact component={Posts} />
         <Route path="/post/new" exact component={NewPost} />
         <Route path="/menu" exact component={Menu} />
-        <Route path="/users/:id" exact component={UserProfile} />
-        <Route path="/users/:id/update" exact component={UpdateProfile} />
+        <Route path="/user/:id" exact component={UserProfile} />
+        <Route path="/user/:id/update" exact component={UpdateProfile} />
         <Route path="/post/:id" exact component={CommentPost} />
       </Switch>
     );

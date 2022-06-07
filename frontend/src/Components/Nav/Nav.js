@@ -10,7 +10,7 @@ import NavPost from "./NavPosts";
 import NavMenu from "./NavMenu";
 import NavNewPost from "./NavNewpost";
 import NavComments from "./NavComments";
-import NavProfile from "./NavProfile";
+import NavUser from "./NavUser";
 import NavUpdate from "./NavUpdate";
 
 import "../../Styles/Components/Nav/Nav.css";
@@ -37,7 +37,7 @@ const Nav = (props) => {
         case "/signup":
             nav = <NavSignUp backHandle={backHandle} />;
             break;
-        case "/posts":
+        case "/post":
             if (auth.isLoggedIn) {
                 nav = <NavPost backHandle={backHandle} />;
             }
@@ -47,22 +47,22 @@ const Nav = (props) => {
                 nav = <NavMenu backHandle={backHandle} />;
             }
             break;
-        case "/posts/new":
+        case "/post/new":
             if (auth.isLoggedIn) {
                 nav = <NavNewPost backHandle={backHandle} />;
             }
             break;
-        case `/posts/${id}`:
+        case `/post/${id}`:
             if (auth.isLoggedIn) {
                 nav = <NavComments backHandle={backHandle} commentHandle={backHandle} />;
             }
             break;
-        case `/profile/${id}`:
+        case `/user/${id}`:
             if (auth.isLoggedIn) {
-                nav = <NavProfile backHandle={backHandle} />;
+                nav = <NavUser backHandle={backHandle} />;
             }
             break;
-        case `/profile/${auth.userId}/update`:
+        case `/user/${auth.userId}/update`:
             if (auth.isLoggedIn) {
                 nav = <NavUpdate />;
             }

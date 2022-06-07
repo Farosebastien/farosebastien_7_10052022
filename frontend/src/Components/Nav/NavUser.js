@@ -15,7 +15,7 @@ const NavProfile = (props) => {
 
     if (auth.userId === userId) {
         modifyBtn = (
-            <NavBtn id="update-profile" name="modifier" icon={modify} link={`/profile/${auth.userId}/update`} iconColor="icon_white" />
+            <NavBtn id="update-profile" name="modifier" icon={modify} link={`/user/${auth.userId}/update`} iconColor="icon_white" />
         );
     } else {
         modifyBtn = "";
