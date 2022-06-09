@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { withRouter } from "react-router-dom";
+//import { withRouter } from "react-router-dom";
 import { AuthContext } from "../../Context/authContext";
 
 import back from "../../images/back-icon.svg";
@@ -29,4 +29,4 @@ const NavProfile = (props) => {
     );
 };
 
-export default withRouter(NavProfile);
+export default NavProfile;

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { withRouter, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import { AuthContext } from "../../Context/authContext";
 
@@ -154,4 +154,4 @@ const Post = (props) => {
     );
 };
 
-export default withRouter(Post);
+export default Post;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
+//import { withRouter } from "react-router-dom";
 
 import Image from "../../images/image-icon.svg";
 import GenProfile from "../../images/generic_profile_picture.jpg";
@@ -53,7 +53,7 @@ const ImageUpload = (props) => {
                 <label htmlFor="upload-button" className={styles.image_container}>
                     {previewUrl ? (
                         <>
-                            <img className={styles.preview_post} src={previewUrl} alt="Prévisualisation de l'image" />
+                            <img className={styles.preview_post} src={previewUrl} alt="Prévisualisation" />
                             <div className={styles.red_banner_post}>
                                 <span className={styles.banner_text_post}>changer l'image</span>
                             </div>
@@ -96,4 +96,4 @@ const ImageUpload = (props) => {
     );
 };
 
-export default withRouter(ImageUpload);
+export default ImageUpload;

@@ -32,7 +32,7 @@
 }
 
 .profile_photo {
-    background-image: url(/static/media/generic_profile_picture.ffc734c4.jpg);
+    background-image: url(../../../images/generic_profile_picture.jpg);
     background-size: cover;
     width: 15rem;
     height: 15rem;

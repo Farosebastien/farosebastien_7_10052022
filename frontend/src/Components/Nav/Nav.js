@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import { withRouter } from "react-router-dom";
+//import { withRouter } from "react-router-dom";
 import { AuthContext } from "../../Context/authContext";
 
 import NavHome from "./NavHome";
@@ -78,4 +78,4 @@ const Nav = (props) => {
     );
 };
 
-export default withRouter(Nav);
+export default Nav;

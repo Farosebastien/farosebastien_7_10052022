@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+//import { withRouter } from "react-router-dom";
 import { useWindowDimension } from "../../Hooks/windowHook";
 
 import Nav from "../../Components/Nav/Nav";
@@ -49,4 +49,4 @@ const Layout = (props) => {
     }
 };
 
-export default withRouter(Layout);
+export default Layout;

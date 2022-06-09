@@ -22,6 +22,7 @@ const UIBtn = (props) => {
         <button id={props.id} className={`${styles.btn} ${btnType} ${props.buttonClass}`} type={props.type} form={props.form} onClick={props.onClick}>
             <div className={styles.justify}>
                 <span className={styles.text}>{props.name}</span>
+                {icon}
             </div>
         </button>
     );
