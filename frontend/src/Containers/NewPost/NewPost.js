@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/authContext";
 import { useForm } from "../../Hooks/formHook";
 import { useWindowDimension } from "./../../Hooks/windowHook";
@@ -15,12 +15,12 @@ import InputField from "../../Components/InputField/InputField";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
 import styles from "../../Styles/Containers/NewPost/NewPost.css";
-import InputField from './../../Components/InputField/InputField';
 
 const NewPost = (props) => {
     //Authentification
     const auth = useContext(AuthContext);
     //History
+    const history = useNavigate();
     const { isLoading, error, sendRequest, clearError } = useHttpRequest();
     //Window Size
     const { width } = useWindowDimension();

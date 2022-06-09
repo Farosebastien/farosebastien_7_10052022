@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { withRouter, useHistory } from "react-router-dom";
+import { withRouter, useNavigate } from "react-router-dom";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import { AuthContext } from "../../Context/authContext";
 
@@ -15,7 +15,7 @@ const Post = (props) => {
     //Request Hook
     const { isLoading, sendRequest } = useHttpRequest();
     //History Context
-    const history = useHistory();
+    const history = useNavigate();
     //Location
     const path = props.location.pathname;
     const postId = props.location.pathname.split("/")[2];
@@ -44,7 +44,8 @@ const Post = (props) => {
                     reaction = event.currentTarget.name;
                 }
                 setUserReaction(event.currentTarget.name);
-                setHasReacted(true);
+                setLiked(true);
+                setDisliked(true);
                 break;
             case "null":
                 if (event.currentTarget.name === 1) {
@@ -111,7 +112,7 @@ const Post = (props) => {
                 }
             );
             if (path === `/post/${postId}`) {
-                history.push("/post");
+                history("/post");
             } else {
                 props.onDelete(props.id);
             }

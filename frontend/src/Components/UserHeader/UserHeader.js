@@ -11,6 +11,7 @@ import styles from "../../Styles/Components/UserHeader/UserHeader.css";
 const UserHeader = (props) => {
     //Authentification
     const auth = useContext(AuthContext);
+    let deleteBtn;
     //vérification si admin ou publicateur pour le bouton supprimer
     if (auth.userId === props.userId || auth.account === 1) {
         deleteBtn = (

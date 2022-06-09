@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useWindowDimension} from "./../../Hooks/windowHook";
 import { useHttpRequest } from "./../../Hooks/httpRequestHook";
 import { AuthContext } from "../../Context/authContext";
@@ -25,7 +25,7 @@ const Menu = () => {
     //Taille de la fenêtre
     const { width } = useWindowDimension();
     //Historique
-    const history = useHistory();
+    const history = useNavigate();
     //Profil
     const [profileData, setProfileData] = useState();
     //Récuperation de posts récents
@@ -48,7 +48,7 @@ const Menu = () => {
     const logoutHandler = (event) => {
         event.preventDefault();
         auth.logout();
-        history.push("/");
+        history("/");
     };
     //Affichage navlinks desktop
     let navlinks;

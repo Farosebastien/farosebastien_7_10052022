@@ -1,8 +1,8 @@
-import React from "react";
-import { Link, useHistory } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "../../Hooks/formHook";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
-import { Authcontext } from "../../Context/authContext";
+import { AuthContext } from "../../Context/authContext";
 import { isEmail, MinLength } from "../../Utils/validators";
 
 import logo from "../../images/logo.png";
@@ -12,13 +12,12 @@ import person from "../../images/person-icon.svg";
 import InputField from "../../Components/InputField/InputField";
 
 import "../../Styles/Containers/Home/Home.css";
-import InputField from './../../Components/InputField/InputField';
 
 const Login = () => {
     //Authentification Context
-    const auth = useContext(Authcontext);
+    const auth = useContext(AuthContext);
     //History Context
-    const history = useHistory();
+    const history = useNavigate();
     //Request Hook
     const { error, sendRequest } = useHttpRequest();
     //Input Hook
@@ -26,7 +25,7 @@ const Login = () => {
         {
             email: {
                 value: "",
-                isValid: False
+                isValid: false
             },
             password: {
                 value: "",
@@ -51,7 +50,7 @@ const Login = () => {
 
             const responseData = await sendRequest("http://localhost:3000/login", "POST", JSON.stringify(data), { "Content-Type": "application/json"});
             auth.login(responseData.userId, responseData.token, responseData.account);
-            history.push("/post");
+            history("/post");
         } catch (err) {}
     };
 

@@ -1,9 +1,19 @@
 import React from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useAuth } from "./Hooks/authHook";
 import { AuthContext } from "./Context/authContext";
 
 //Containers
+import Layout from "./Containers/Layout/Layout";
+import Home from "./Containers/Home/Home";
+import Login from "./Containers/Login/Login";
+import SignUp from "./Containers/Signup/Signup";
+import Posts from "./Containers/Posts/Posts";
+import Menu from "./Containers/Menu/Menu";
+//import UserProfile from "./Containers/UserProfile/UserProfile";
+import UpdateProfile from "./Containers/UpdateProfile/UpdateProfile";
+import CommentPost from "./Containers/CommentPost/CommentPost";
+import NewPost from "./Containers/NewPost/NewPost";
 
 
 const App = () => {
@@ -13,22 +23,22 @@ const App = () => {
 
   if (token) {
     routes = (
-      <Switch>
-        <Route path="/post" exact component={Posts} />
-        <Route path="/post/new" exact component={NewPost} />
-        <Route path="/menu" exact component={Menu} />
-        <Route path="/user/:id" exact component={UserProfile} />
-        <Route path="/user/:id/update" exact component={UpdateProfile} />
-        <Route path="/post/:id" exact component={CommentPost} />
-      </Switch>
+      <Routes>
+        <Route path="/post" component={Posts} />
+        <Route path="/post/new" component={NewPost} />
+        <Route path="/menu" component={Menu} />
+        {/*<Route path="/user/:id" component={UserProfile} />*/}
+        <Route path="/user/:id/update" component={UpdateProfile} />
+        <Route path="/post/:id" component={CommentPost} />
+      </Routes>
     );
   } else {
     routes = (
-      <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/login" exact component={Login} />
-        <Route path="/signup" exact component={Signup} />
-      </Switch>
+      <Routes>
+        <Route path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={SignUp} />
+      </Routes>
     );
   }
   

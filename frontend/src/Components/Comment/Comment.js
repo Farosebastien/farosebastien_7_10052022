@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "../../Context/authContext";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import UserHeader from "../UserHeader/UserHeader";
@@ -8,6 +8,8 @@ import styles from "../../Styles/Components/Comment/Comment.css";
 const Comment = (props) => {
     //Authentification context
     const auth = useContext(AuthContext);
+
+    const { sendRequest } = useHttpRequest();
 
     //Request Hook
     const DeleteCommentHandler = async () => {

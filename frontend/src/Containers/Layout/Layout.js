@@ -5,7 +5,7 @@ import { useWindowDimension } from "../../Hooks/windowHook";
 import Nav from "../../Components/Nav/Nav";
 import Menu from "../Menu/Menu";
 
-import "../../Styles/Containers/Layout.css";
+import "../../Styles/Containers/Layout/Layout.css";
 
 const Layout = (props) => {
     const { width } = useWindowDimension();

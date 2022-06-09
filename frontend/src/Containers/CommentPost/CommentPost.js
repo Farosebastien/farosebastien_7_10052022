@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { useHttpRequest } from "../../hooks/httpRequestHook";
-import { useForm } from "../../hooks/formHook";
+import { useHttpRequest } from "../../Hooks/httpRequestHook";
+import { useForm } from "../../Hooks/formHook";
 import { AuthContext } from "../../Context/authContext";
 import { MinLength, MaxLength } from "../../Utils/validators";
 
