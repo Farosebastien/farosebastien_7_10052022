@@ -9,7 +9,7 @@ const NavHome = () => {
     return (
         <>
             <NavBtn icon={login} name="connexion" link="/login" iconColor="icon_white" />
-            <NavBtn icon={signup} name="s'inscrire" link="/signup" iconColor="icon_white" />
+            <NavBtn icon={signup} name="s'inscrire" link="/signup" iconColor="icon_white"/>
         </>
     );
 };

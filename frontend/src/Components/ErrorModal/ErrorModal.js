@@ -3,7 +3,7 @@ import React from "react";
 import Modal from "./../Modal/Modal";
 import UIBtn from "./../Buttons/UIBtn";
 
-import styles from "../../Styles/Components/ErrorModal/ErrorModal.css";
+import styles from "../../Styles/Components/ErrorModal/ErrorModal.module.css";
 
 const ErrorModal = (props) => {
     return (

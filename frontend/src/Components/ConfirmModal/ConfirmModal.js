@@ -4,7 +4,7 @@ import UIBtn from "../Buttons/UIBtn";
 
 import ok from "../../images/ok-icon.svg";
 
-import styles from "../../Styles/Components/ConfirmModal/ConfirmModal.css";
+import styles from "../../Styles/Components/ConfirmModal/ConfirmModal.module.css";
 
 const ConfirmModal = (props) => {
     return (

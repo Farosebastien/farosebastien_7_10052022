@@ -14,7 +14,7 @@ import ImageUpload from "../../Components/ImageUpload/ImageUpload";
 import InputField from "../../Components/InputField/InputField";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
-import styles from "../../Styles/Containers/NewPost/NewPost.css";
+import styles from "../../Styles/Containers/NewPost/NewPost.module.css";
 
 const NewPost = (props) => {
     //Authentification
@@ -52,7 +52,7 @@ const NewPost = (props) => {
         formData.append("image", formState.inputs.image.value);
 
         try {
-            await sendRequest("http://localhost:3000/post", "POST", formData, {
+            await sendRequest("http://localhost:5000/post", "POST", formData, {
                 Authorization: "Bearer " + auth.token
             });
             history.pushState("/post");

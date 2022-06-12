@@ -18,7 +18,7 @@ import password from "../../images/password-icon.svg";
 import back from "../../images/back-icon.svg";
 import deleteicon from "../../images/delete-icon.svg";
 
-import styles from "../../Styles/Containers/UpdateProfile/UpdateProfile.css";
+import styles from "../../Styles/Containers/UpdateProfile/UpdateProfile.module.css";
 
 const UpdateProfile = () => {
     //Auth context
@@ -74,7 +74,7 @@ const UpdateProfile = () => {
         const fetchUser = async () => {
             try {
                 const userData = await sendRequest(
-                    `http://localhost:3000/user/${auth.userId}`, "GET", null, {Authorization: "Bearer " + auth.token}
+                    `http://localhost:5000/user/${auth.userId}`, "GET", null, {Authorization: "Bearer " + auth.token}
                 );
                 setUserDataState(userData);
                 setFormState(
@@ -122,7 +122,7 @@ const UpdateProfile = () => {
         formData.append("username", formState.inputs.username.value);
         formData.append("email", formState.inputs.email.value);
         try {
-            await sendRequest("http://localhost:3000/user/update", "PATCH", formData, {
+            await sendRequest("http://localhost:5000/user/update", "PATCH", formData, {
                 Authorization: "Bearer " + auth.token,
             });
 
@@ -136,7 +136,7 @@ const UpdateProfile = () => {
 
         try {
             await sendRequest(
-                "http://localhost:3000/user/update",
+                "http://localhost:5000/user/update",
                 "PUT",
                 JSON.stringify({
                     password: formState.inputs.password.value,
@@ -167,7 +167,7 @@ const UpdateProfile = () => {
         event.preventDefault();
 
         try {
-            await sendRequest(`http://localhost:3000/user/${auth.userId}`, "DELETE", null, {
+            await sendRequest(`http://localhost:5000/user/${auth.userId}`, "DELETE", null, {
                 "Content-Type": "application/json",
                 Authorization: "Bearer " + auth.token,
             });

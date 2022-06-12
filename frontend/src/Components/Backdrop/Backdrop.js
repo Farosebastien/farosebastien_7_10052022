@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import styles from "../../Styles/Components/Backdrop/Backdrop.css";
+import styles from "../../Styles/Components/Backdrop/Backdrop.module.css";
 
 const Backdrop = (props) => {
     //Portail

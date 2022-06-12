@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+//import withRouter from "../../Hooks/withRouter"
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import { AuthContext } from "../../Context/authContext";
 
@@ -7,7 +8,19 @@ import ReactionBtn from "../../Components/Buttons/ReactionBtn";
 import UserHeader from "../UserHeader/UserHeader";
 import Spinner from "../LoadingSpinner/LoadingSpinner";
 
-import styles from "../../Styles/Components/Post/Post.css";
+import styles from "../../Styles/Components/Post/Post.module.css";
+
+function withRouter(Component) {
+    function ComponentWithRouterProps(props) {
+        const location = useLocation();
+        const navigate = useNavigate();
+        const params = useParams();
+        return (
+            <Component {...props} router={{ location, navigate, params }} />
+        );
+    }
+    return ComponentWithRouterProps;
+}
 
 const Post = (props) => {
     //Authentification
@@ -17,8 +30,8 @@ const Post = (props) => {
     //History Context
     const history = useNavigate();
     //Location
-    const path = props.location.pathname;
-    const postId = props.location.pathname.split("/")[2];
+    const path = props.router.location.pathname;
+    const postId = props.router.location.pathname.split("/")[2];
     //User Likes
     const [likesCounter, setLikesCounter] = useState(props.likes);
     //User Dislikes
@@ -86,7 +99,7 @@ const Post = (props) => {
                 break;
         }
 
-        fetch (`http://localhost:3000/post/reaction`, {
+        fetch (`http://localhost:5000/post/reaction`, {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: "Bearer " + auth.token },
             body: JSON.stringify({
@@ -105,7 +118,7 @@ const Post = (props) => {
     //Delete post
     const DeletePostHandler = async () => {
         try {
-            await sendRequest(`http://localhost:3000/post/${props.id}`, "DELETE",
+            await sendRequest(`http://localhost:5000/post/${props.id}`, "DELETE",
                 {
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + auth.token
@@ -120,7 +133,7 @@ const Post = (props) => {
     };
     //Type de visualisation sur Post et CommentPost
     let commentBlock;
-    if(props.location.pathname === "/post") {
+    if(props.router.location.pathname === "/post") {
         commentBlock = (
             <>
                 <ReactionBtn btnType="decor" icon="commments" text={props.comments} styling="" reaction={null} />
@@ -154,4 +167,4 @@ const Post = (props) => {
     );
 };
 
-export default Post;
+export default withRouter(Post);

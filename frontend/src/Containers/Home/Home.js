@@ -6,7 +6,7 @@ import "../../Styles/Containers/Home/Home.css";
 
 const Home = () => {
     return (
-        <div className="backgroun_image">
+        <div className="background_image">
             <img src={logo} className="logo" alt="Logo de Groupomania" />
             <div className="welcome">
                 <h3 className="title">Bienvenue</h3>

@@ -2,7 +2,7 @@ import React from "react";
 
 import logotype from "../../images/logotype.svg";
 
-import styles from "../../Styles/Components/Counter/Counter.css";
+import styles from "../../Styles/Components/Counter/Counter.module.css";
 
 const Counter = (props) => {
     return (

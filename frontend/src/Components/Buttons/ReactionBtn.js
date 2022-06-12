@@ -6,7 +6,7 @@ import dislike from "../../images/dislike-icon.svg";
 import comment from "../../images/comment-icon.svg";
 import comments from "../../images/comments-icon.svg";
 
-import styles from "../../Styles/Components/Buttons/ReactionBtn.css";
+import styles from "../../Styles/Components/Buttons/ReactionBtn.module.css";
 
 const ReactionBtn = (props) => {
     //couleur du bouton

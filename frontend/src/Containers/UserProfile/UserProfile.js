@@ -13,7 +13,7 @@ import NavBtn from "../../Components/Buttons/NavBtn";
 import Counter from "../../Components/Counter/Counter";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
-import styles from "../../Styles/Containers/UserProfile/UserProfile.css";
+import styles from "../../Styles/Containers/UserProfile/UserProfile.module.css";
 
 const UserProfile = () => {
     //Auth context
@@ -30,7 +30,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const userData = await sendRequest(`http://localhost:3000/user/${userId}`, "GET", null, {
+                const userData = await sendRequest(`http://localhost:5000/user/${userId}`, "GET", null, {
                     Authorization: "Bearer " + auth.token
                 });
                 setProfileData(userData);

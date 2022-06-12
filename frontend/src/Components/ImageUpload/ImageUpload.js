@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from "react";
-//import { withRouter } from "react-router-dom";
-
+//import withRouter from "../../Hooks/withRouter";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Image from "../../images/image-icon.svg";
 import GenProfile from "../../images/generic_profile_picture.jpg";
 
-import styles from "../../Styles/Components/ImageUpload/ImageUpload.css";
+import styles from "../../Styles/Components/ImageUpload/ImageUpload.module.css";
+
+function withRouter(Component) {
+    function ComponentWithRouterProps(props) {
+        const location = useLocation();
+        const navigate = useNavigate();
+        const params = useParams();
+        return (
+            <Component {...props} router={{ location, navigate, params }} />
+        );
+    }
+    return ComponentWithRouterProps;
+}
 
 const ImageUpload = (props) => {
     //Image
@@ -14,7 +26,7 @@ const ImageUpload = (props) => {
     //Validation
     const [isValid, setIsValid] = useState(false);
     //Localisation actuelle
-    const path = props.location.pathname;
+    const path = props.router.location.pathname;
 
     useEffect(() => {
         //Si il n'y a pas d'image
@@ -96,4 +108,4 @@ const ImageUpload = (props) => {
     );
 };
 
-export default ImageUpload;
+export default withRouter(ImageUpload);

@@ -15,7 +15,7 @@ import posts from "../../images/posts-icon.svg";
 import ErrorModal from "./../../Components/ErrorModal/ErrorModal";
 import Spinner from "./../../Components/LoadingSpinner/LoadingSpinner";
 
-import styles from "../../Styles/Containers/Menu/Menu.css"
+import styles from "../../Styles/Containers/Menu/Menu.module.css"
 
 const Menu = () => {
     //Auth context
@@ -34,7 +34,7 @@ const Menu = () => {
         if (auth.token && auth.userId) {
             const fetchPosts = async () => {
                 try {
-                    const userData = await sendRequest(`http://localhost:3000/user/${auth.userId}`, "GET", null, {Authorization: "Bearer " + auth.token});
+                    const userData = await sendRequest(`http://localhost:5000/user/${auth.userId}`, "GET", null, {Authorization: "Bearer " + auth.token});
                     if (mounted) {
                         setProfileData(userData);
                     }
@@ -56,7 +56,7 @@ const Menu = () => {
     if (width >= 1024) {
         navlinks = (
             <>
-                <Link to="/posts" className={`${styles.btn} ${styles.border}`}>
+                <Link to="/post" className={`${styles.btn} ${styles.border}`}>
                     <span className={styles.text}>Publications</span>
                     <img className={`${styles.icon} icon_white`} src={posts} alt="" />
                 </Link>
@@ -98,12 +98,12 @@ const Menu = () => {
                             </div>
                         </div>
                         <nav className={styles.list}>
-                            <Link to={`profile/${auth.userId}`} className={`${styles.btn} ${styles.border}`}>
+                            <Link to={`user/${auth.userId}`} className={`${styles.btn} ${styles.border}`}>
                                 <span className={styles.text}>Mon profil</span>
                                 <img className={`${styles.icon} icon_white`} src={person} alt="" />
                             </Link>
                             {navlinks}
-                            <Link to="/posts" className={`${styles.btn} ${styles.border}`}>
+                            <Link to="/post" className={`${styles.btn} ${styles.border}`}>
                                 <span className={styles.text}>Annuaire</span>
                                 <img className={`${styles.icon} icon_white`} src={agenda} alt="" />
                             </Link>

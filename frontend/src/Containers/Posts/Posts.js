@@ -12,7 +12,7 @@ import clockIcon from "../../images/clock-icon.svg";
 import coffeeIcon from "../../images/coffee-icon.svg";
 import postIcon from "../../images/post-icon.svg";
 
-import styles from "../../Styles/Containers/Posts/Posts.css";
+import styles from "../../Styles/Containers/Posts/Posts.module.css";
 
 const Posts = () => {
     //auth context
@@ -30,7 +30,7 @@ const Posts = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const postsData = await sendRequest("http://localhost:3000/post", "GET", null, {
+                const postsData = await sendRequest("http://localhost:5000/post", "GET", null, {
                     Authorization: "Bearer " + auth.token
                 });
                 setPosts(postsData);
@@ -45,7 +45,7 @@ const Posts = () => {
             mostLiked: "",
         });
         try {
-            const postsData = await sendRequest("http://localhost:3000/post", "GET", null, {
+            const postsData = await sendRequest("http://localhost:5000/post", "GET", null, {
                 Authorization: "Bearer " + auth.token
             });
             setPosts(postsData);
@@ -58,7 +58,7 @@ const Posts = () => {
             mostLiked: "active",
         });
         try {
-            const postsData = await sendRequest("http://localhost:3000/post/mostLiked", "GET", null, {
+            const postsData = await sendRequest("http://localhost:5000/post/mostLiked", "GET", null, {
                 Authorization: "Bearer " + auth.token
             });
             setPosts(postsData);

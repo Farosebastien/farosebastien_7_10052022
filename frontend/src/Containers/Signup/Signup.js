@@ -14,7 +14,7 @@ import email from "../../images/email-icon.svg";
 import InputField from "../../Components/InputField/InputField";
 
 import "../../Styles/Containers/Home/Home.css";
-import styles from "../../Styles/Containers/Signup/Signup.css";
+import styles from "../../Styles/Containers/Signup/Signup.module.css";
 
 const SignUp = () => {
     //Auth context
@@ -57,14 +57,16 @@ const SignUp = () => {
         }
 
         try {
+            console.log(formState)
             const data = {
                 firstname: formState.inputs.firstname.value,
-                lastname: formState.inputs.lastname.value.toUpperCase(),
+                lastname: formState.inputs.lastname.value,
                 username: formState.inputs.username.value,
                 email: formState.inputs.email.value,
                 password: formState.inputs.password.value
             };
-            const responseData = await sendRequest("http://localhost:3000/signup", "POST", JSON.stringify(data), {
+            console.log(JSON.stringify(data))
+            const responseData = await sendRequest("http://localhost:5000/signup", "POST", JSON.stringify(data), {
                 "Content-Type": " application/json"
             });
             auth.login(responseData.userId, responseData.token, responseData.account);
@@ -77,9 +79,9 @@ const SignUp = () => {
             <div className="background_image">
                 <img src={logo} className="logo" alt="logo de Groupomania" />
                 <form id="signup-form" className={styles.input_list} onSubmit={signupHandler}>
-                    <InputField id="firstName" name="firstName" type="text" placeholder="prénom" autocomplete="given-name" icon={person} alt="first name icon" element="input" hasLabel="no" textIsWhite="yes" validators={[MinLength(2), isText()]} errorText="Veuillez entrer uniquement des lettres" onInput={inputHandler} initialValue={formState.inputs.firstname.value} initialValid={formState.inputs.firstname.isValid} />
-                    <InputField id="lastName" name="lastName" type="text" placeholder="nom" autocomplete="family-name" icon={lastname} alt="last name icon" element="input" hasLabel="no" textIsWhite="yes" validators={[MinLength(2), isText()]} errorText="Veuillez entrer uniquement des lettres" onInput={inputHandler} initialValue={formState.inputs.lastname.value} initialValid={formState.inputs.lastname.isValid} />
-                    <InputField id="userName" name="userName" type="text" placeholder="nom d'utilisateur" autocomplete="nickname" icon={person} alt="nickname icon" element="input" hasLabel="no" textIsWhite="yes" validators={[MinLength(2), isText()]} errorText="Veuillez entrer uniquement des lettres" onInput={inputHandler} initialValue={formState.inputs.username.value} initialValid={formState.inputs.username.isValid} />
+                    <InputField id="firstname" name="firstname" type="text" placeholder="prénom" autocomplete="given-name" icon={person} alt="first name icon" element="input" hasLabel="no" textIsWhite="yes" validators={[MinLength(2), isText()]} errorText="Veuillez entrer uniquement des lettres" onInput={inputHandler} initialValue={formState.inputs.firstname.value} initialValid={formState.inputs.firstname.isValid} />
+                    <InputField id="lastname" name="lastname" type="text" placeholder="nom" autocomplete="family-name" icon={lastname} alt="last name icon" element="input" hasLabel="no" textIsWhite="yes" validators={[MinLength(2), isText()]} errorText="Veuillez entrer uniquement des lettres" onInput={inputHandler} initialValue={formState.inputs.lastname.value} initialValid={formState.inputs.lastname.isValid} />
+                    <InputField id="username" name="username" type="text" placeholder="nom d'utilisateur" autocomplete="nickname" icon={person} alt="nickname icon" element="input" hasLabel="no" textIsWhite="yes" validators={[MinLength(2), isText()]} errorText="Veuillez entrer uniquement des lettres" onInput={inputHandler} initialValue={formState.inputs.username.value} initialValid={formState.inputs.username.isValid} />
                     <InputField id="email" name="email" type="email" placeholder="email" autocomplete="email" icon={email} alt="email icon" element="input" hasLabel="no" textIsWhite="yes" validators={[isEmail(), MinLength(6)]} errorText="email incorrect" onInput={inputHandler} initialValue={formState.inputs.email.value} initialValid={formState.inputs.email.isValid} />
                     <InputField id="password" name="password" type="password" placeholder="mot de passe" autocomplete="current-password" icon={password} alt="password icon" element="input" hasLabel="no" textIsWhite="yes" validators={[MinLength(8)]} errorText="Minimum 1 majuscule, 1 chiffre et 8 lettres" onInput={inputHandler} initialValue={formState.inputs.password.value} initialValid={formState.inputs.password.isValid} />
                 </form>

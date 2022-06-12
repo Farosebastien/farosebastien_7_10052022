@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from "react";
 import { validate } from "../../Utils/validators";
 
-import styles from "../../Styles/Components/InputField/InputField.css"
+import styles from "../../Styles/Components/InputField/InputField.module.css"
 
 //En fonction de l'action en cours change ou touch
 const inputReducer = (state, action) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import Post from "../Post/Post";
 
-import styles from "../../Styles/Components/PostList/PostList.css";
+import styles from "../../Styles/Components/PostList/PostList.module.css";
 
 const PostList = (props) => {
     if (props.items.length === 0) {

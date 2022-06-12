@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
-
-//import { withRouter } from "react-router-dom";
+//import withRouter from "../../Hooks/withRouter";
 import { AuthContext } from "../../Context/authContext";
-
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import NavHome from "./NavHome";
-import NavLogin from "./NavUpdate";
+import NavLogin from "./NavLogin";
 import NavSignUp from "./NavSignup";
 import NavPost from "./NavPosts";
 import NavMenu from "./NavMenu";
@@ -15,19 +14,33 @@ import NavUpdate from "./NavUpdate";
 
 import "../../Styles/Components/Nav/Nav.css";
 
+function withRouter(Component) {
+    function ComponentWithRouterProps(props) {
+        const location = useLocation();
+        const navigate = useNavigate();
+        const params = useParams();
+        return (
+            <Component {...props} router={{ location, navigate, params }} />
+        );
+    }
+    return ComponentWithRouterProps;
+}
+
 const Nav = (props) => {
     const auth = useContext(AuthContext);
+    const path = useLocation().pathname;
+    const history = useNavigate();
 
-    const id = props.location.pathname.split("/")[2];
+    const id = useParams();
 
     const backHandle = (e) => {
         e.preventDefault();
-        props.history.goBack();
+        history("/");
     };
 
     let nav;
 
-    switch (props.location.pathname) {
+    switch (path) {
         case "/":
             nav = <NavHome />;
             break;

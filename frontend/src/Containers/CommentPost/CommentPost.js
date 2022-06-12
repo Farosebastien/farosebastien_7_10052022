@@ -13,7 +13,7 @@ import Comment from "../../Components/Comment/Comment";
 import InputField from "../../Components/InputField/InputField";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
-import styles from "../../Styles/Containers/CommentPost/CommentPost.css";
+import styles from "../../Styles/Containers/CommentPost/CommentPost.module.css";
 
 const CommentPost = () => {
     //Authentification context
@@ -41,7 +41,7 @@ const CommentPost = () => {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const post = await sendRequest(`http://localhost:3000/post/${postId}`, "GET", null, {
+                const post = await sendRequest(`http://localhost:5000/post/${postId}`, "GET", null, {
                     Authorization: "Bearer " + auth.token,
                 });
                 setPost(post[0]);
@@ -60,7 +60,7 @@ const CommentPost = () => {
         }
 
         try {
-            const newCommentData = await sendRequest(`http://localhost:3000/post/comment`, "POST", JSON.stringify({
+            const newCommentData = await sendRequest(`http://localhost:5000/post/comment`, "POST", JSON.stringify({
                     postId: postId,
                     content: formState.inputs.comment.value
                 }),

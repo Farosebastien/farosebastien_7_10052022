@@ -25,7 +25,7 @@ const App = () => {
   if (token) {
     routes = (
       <Routes>
-        <Route path="/post" component={Posts} />
+        <Route path="/post" exact component={Posts} />
         <Route path="/post/new" component={NewPost} />
         <Route path="/menu" component={Menu} />
         <Route path="/user/:id" component={UserProfile} />
@@ -36,9 +36,9 @@ const App = () => {
   } else {
     routes = (
       <Routes>
-        <Route path="/" component={Home} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={SignUp} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     );
   }
@@ -47,8 +47,8 @@ const App = () => {
     <AuthContext.Provider
       value={{
         isLoggedIn: !!token,
-        token: token,
         userId: userId,
+        token: token,
         account: account,
         login: login,
         logout: logout

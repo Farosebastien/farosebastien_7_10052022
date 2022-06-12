@@ -47,8 +47,9 @@ const Login = () => {
                 email: formState.inputs.email.value,
                 password: formState.inputs.password.value
             };
+            console.log(data)
 
-            const responseData = await sendRequest("http://localhost:3000/login", "POST", JSON.stringify(data), { "Content-Type": "application/json"});
+            const responseData = await sendRequest("http://localhost:5000/login", "POST", JSON.stringify(data), { "Content-Type": "application/json"});
             auth.login(responseData.userId, responseData.token, responseData.account);
             history("/post");
         } catch (err) {}

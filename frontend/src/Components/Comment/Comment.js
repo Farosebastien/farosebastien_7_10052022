@@ -3,7 +3,7 @@ import { AuthContext } from "../../Context/authContext";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import UserHeader from "../UserHeader/UserHeader";
 
-import styles from "../../Styles/Components/Comment/Comment.css";
+import styles from "../../Styles/Components/Comment/Comment.module.css";
 
 const Comment = (props) => {
     //Authentification context
@@ -14,7 +14,7 @@ const Comment = (props) => {
     //Request Hook
     const DeleteCommentHandler = async () => {
         try {
-            await sendRequest(`http://localhost:3000/post/comments/${props.id}`, "DELETE", null, {
+            await sendRequest(`http://localhost:5000/post/comments/${props.id}`, "DELETE", null, {
                 Authorization: "Bearer " + auth.token,
             });
             props.onDeleteComment(props.id);

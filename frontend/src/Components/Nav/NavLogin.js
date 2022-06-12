@@ -9,7 +9,7 @@ const NavLogin = (props) => {
     return (
         <>
             <ActionBtn icon={back} name="retourner" onClick={props.backHandle} iconColor="icon_white" />
-            <ActionBtn id="login-btn" form="login-form" type="submit" icon={login} iconColor="icon_white" />
+            <ActionBtn id="login-btn" form="login-form" name="connexion" type="submit" icon={login} iconColor="icon_white" />
         </>
     );
 };

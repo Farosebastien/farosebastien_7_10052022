@@ -1,6 +1,6 @@
 import React from "react";
 
-import styles from "../../Styles/Components/Buttons/UIBtn.css";
+import styles from "../../Styles/Components/Buttons/UIBtn.module.css";
 
 const UIBtn = (props) => {
     let icon;
