@@ -13,7 +13,7 @@ import Comment from "../../Components/Comment/Comment";
 import InputField from "../../Components/InputField/InputField";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
-import styles from "../../Styles/Containers/CommentPost/CommentPost.module.css";
+import styles from "./CommentPost.module.css";
 
 const CommentPost = () => {
     //Authentification context

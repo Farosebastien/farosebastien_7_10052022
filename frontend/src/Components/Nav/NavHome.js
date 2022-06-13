@@ -3,7 +3,7 @@ import React from "react";
 import signup from "../../images/signup-icon.svg";
 import login from "../../images/login-icon.svg";
 
-import NavBtn from "./../Buttons/NavBtn";
+import NavBtn from "./../Buttons/NavBtn/NavBtn";
 
 const NavHome = () => {
     return (

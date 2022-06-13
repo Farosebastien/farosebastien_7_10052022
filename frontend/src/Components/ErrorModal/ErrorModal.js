@@ -1,9 +1,9 @@
 import React from "react";
 
 import Modal from "./../Modal/Modal";
-import UIBtn from "./../Buttons/UIBtn";
+import UIBtn from "./../Buttons/UIBtn/UIBtn";
 
-import styles from "../../Styles/Components/ErrorModal/ErrorModal.module.css";
+import styles from "./ErrorModal.module.css";
 
 const ErrorModal = (props) => {
     return (

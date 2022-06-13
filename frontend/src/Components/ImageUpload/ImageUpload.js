@@ -4,7 +4,7 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Image from "../../images/image-icon.svg";
 import GenProfile from "../../images/generic_profile_picture.jpg";
 
-import styles from "../../Styles/Components/ImageUpload/ImageUpload.module.css";
+import styles from "./ImageUpload.module.css";
 
 function withRouter(Component) {
     function ComponentWithRouterProps(props) {

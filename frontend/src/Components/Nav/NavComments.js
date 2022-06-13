@@ -2,7 +2,7 @@ import React from "react";
 
 import back from "../../images/back-icon.svg";
 
-import ActionBtn from "./../Buttons/ActionBtn";
+import ActionBtn from "./../Buttons/ActionBtn/ActionBtn";
 
 const NavComments = (props) => {
     return (

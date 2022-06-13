@@ -13,8 +13,8 @@ import email from "../../images/email-icon.svg";
 
 import InputField from "../../Components/InputField/InputField";
 
-import "../../Styles/Containers/Home/Home.css";
-import styles from "../../Styles/Containers/Signup/Signup.module.css";
+import "../Home/Home.css";
+import styles from "./Signup.module.css";
 
 const SignUp = () => {
     //Auth context

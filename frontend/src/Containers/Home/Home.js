@@ -2,7 +2,7 @@ import React from "react";
 
 import logo from "../../images/logo.png";
 
-import "../../Styles/Containers/Home/Home.css";
+import "./Home.css";
 
 const Home = () => {
     return (

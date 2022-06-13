@@ -15,7 +15,7 @@ import posts from "../../images/posts-icon.svg";
 import ErrorModal from "./../../Components/ErrorModal/ErrorModal";
 import Spinner from "./../../Components/LoadingSpinner/LoadingSpinner";
 
-import styles from "../../Styles/Containers/Menu/Menu.module.css"
+import styles from "./Menu.module.css"
 
 const Menu = () => {
     //Auth context

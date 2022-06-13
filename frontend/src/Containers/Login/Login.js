@@ -11,7 +11,7 @@ import person from "../../images/person-icon.svg";
 
 import InputField from "../../Components/InputField/InputField";
 
-import "../../Styles/Containers/Home/Home.css";
+import "./Home.css";
 
 const Login = () => {
     //Authentification Context

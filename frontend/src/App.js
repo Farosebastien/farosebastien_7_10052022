@@ -15,7 +15,7 @@ import UpdateProfile from "./Containers/UpdateProfile/UpdateProfile";
 import CommentPost from "./Containers/CommentPost/CommentPost";
 import NewPost from "./Containers/NewPost/NewPost";
 
-import "./Styles/App.css";
+import "./App.css";
 
 const App = () => {
   const { userId, token, account, login, logout } = useAuth();

@@ -9,11 +9,11 @@ import modify from "../../images/modify-icon.svg";
 import back from "../../images/back-icon.svg";
 
 import ErrorModal from "../../Components/ErrorModal/ErrorModal";
-import NavBtn from "../../Components/Buttons/NavBtn";
+import NavBtn from "../../Components/Buttons/NavBtn/NavBtn";
 import Counter from "../../Components/Counter/Counter";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
-import styles from "../../Styles/Containers/UserProfile/UserProfile.module.css";
+import styles from "./UserProfile.module.css";
 
 const UserProfile = () => {
     //Auth context

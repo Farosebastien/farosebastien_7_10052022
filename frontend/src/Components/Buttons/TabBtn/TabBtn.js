@@ -1,6 +1,6 @@
 import React from "react";
 
-import styles from "../../Styles/Components/Buttons/TabBtn.module.css";
+import styles from "./TabBtn.module.css";
 
 const TabBtn = (props) => {
     let btn;

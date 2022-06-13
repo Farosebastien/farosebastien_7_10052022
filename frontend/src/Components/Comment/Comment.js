@@ -3,7 +3,7 @@ import { AuthContext } from "../../Context/authContext";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import UserHeader from "../UserHeader/UserHeader";
 
-import styles from "../../Styles/Components/Comment/Comment.module.css";
+import styles from "./Comment.module.css";
 
 const Comment = (props) => {
     //Authentification context

@@ -6,7 +6,7 @@ import GenProfile from "../../images/generic_profile_picture.jpg";
 
 import DeleteX from "../../images/x-icon.svg";
 
-import styles from "../../Styles/Components/UserHeader/UserHeader.module.css";
+import styles from "./UserHeader.module.css";
 
 const UserHeader = (props) => {
     //Authentification

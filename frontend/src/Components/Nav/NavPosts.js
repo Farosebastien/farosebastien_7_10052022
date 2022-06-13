@@ -3,7 +3,7 @@ import React from "react";
 import menu from "../../images/menu-icon.svg";
 import post from "../../images/post-icon.svg";
 
-import NavBtn from "./../Buttons/NavBtn";
+import NavBtn from "./../Buttons/NavBtn/NavBtn";
 
 const NavPost = () => {
     return (

@@ -1,23 +1,10 @@
 import React from "react";
-//import withRouter from "../../Hooks/withRouter";
 import { useWindowDimension } from "../../Hooks/windowHook";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Nav from "../../Components/Nav/Nav";
 import Menu from "../Menu/Menu";
 
-import "../../Styles/Containers/Layout/Layout.css";
-
-/*function withRouter(Component) {
-    function ComponentWithRouterProps(props) {
-        const location = useLocation();
-        const navigate = useNavigate();
-        const params = useParams();
-        return (
-            <Component {...props} router={{ location, navigate, params }} />
-        );
-    }
-    return ComponentWithRouterProps;
-}*/
+import "./Layout.css";
 
 const Layout = (props) => {
     const { width } = useWindowDimension();

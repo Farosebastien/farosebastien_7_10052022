@@ -9,12 +9,12 @@ import { MinLength, MaxLength } from "../../Utils/validators";
 import backIcon from "../../images/back-icon.svg";
 
 import ErrorModal from "../../Components/ErrorModal/ErrorModal";
-import UIBtn from "../../Components/Buttons/UIBtn";
+import UIBtn from "../../Components/Buttons/UIBtn/UIBtn";
 import ImageUpload from "../../Components/ImageUpload/ImageUpload";
 import InputField from "../../Components/InputField/InputField";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
-import styles from "../../Styles/Containers/NewPost/NewPost.module.css";
+import styles from "./NewPost.module.css";
 
 const NewPost = (props) => {
     //Authentification

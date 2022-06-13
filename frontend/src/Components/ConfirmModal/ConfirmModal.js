@@ -1,10 +1,10 @@
 import React from "react";
 import Modal from "../Modal/Modal";
-import UIBtn from "../Buttons/UIBtn";
+import UIBtn from "../Buttons/UIBtn/UIBtn";
 
 import ok from "../../images/ok-icon.svg";
 
-import styles from "../../Styles/Components/ConfirmModal/ConfirmModal.module.css";
+import styles from "./ConfirmModal.module.css";
 
 const ConfirmModal = (props) => {
     return (

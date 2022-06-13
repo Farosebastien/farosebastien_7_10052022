@@ -8,8 +8,8 @@ import { useWindowDimension } from "../../Hooks/windowHook";
 
 import ErrorModal from "../../Components/ErrorModal/ErrorModal";
 import ComfirmModal from "../../Components/ConfirmModal/ConfirmModal";
-import NavBtn from "../../Components/Buttons/NavBtn";
-import UIBtn from "../../Components/Buttons/UIBtn";
+import NavBtn from "../../Components/Buttons/NavBtn/NavBtn";
+import UIBtn from "../../Components/Buttons/UIBtn/UIBtn";
 import ImageUpload from "../../Components/ImageUpload/ImageUpload";
 import InputField from "../../Components/InputField/InputField";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
@@ -18,7 +18,7 @@ import password from "../../images/password-icon.svg";
 import back from "../../images/back-icon.svg";
 import deleteicon from "../../images/delete-icon.svg";
 
-import styles from "../../Styles/Containers/UpdateProfile/UpdateProfile.module.css";
+import styles from "./UpdateProfile.module.css";
 
 const UpdateProfile = () => {
     //Auth context

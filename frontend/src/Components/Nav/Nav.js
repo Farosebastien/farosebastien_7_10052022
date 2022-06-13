@@ -12,7 +12,7 @@ import NavComments from "./NavComments";
 import NavUser from "./NavUser";
 import NavUpdate from "./NavUpdate";
 
-import "../../Styles/Components/Nav/Nav.css";
+import "./Nav.css";
 
 function withRouter(Component) {
     function ComponentWithRouterProps(props) {

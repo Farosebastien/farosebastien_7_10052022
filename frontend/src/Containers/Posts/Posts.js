@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import { useWindowDimension } from "../../Hooks/windowHook";
 import ErrorModal from "../../Components/ErrorModal/ErrorModal"
-import TabBtn from "../../Components/Buttons/TabBtn";
+import TabBtn from "../../Components/Buttons/TabBtn/TabBtn";
 import PostList from "../../Components/PostList/PostList";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
@@ -12,7 +12,7 @@ import clockIcon from "../../images/clock-icon.svg";
 import coffeeIcon from "../../images/coffee-icon.svg";
 import postIcon from "../../images/post-icon.svg";
 
-import styles from "../../Styles/Containers/Posts/Posts.module.css";
+import styles from "./Posts.module.css";
 
 const Posts = () => {
     //auth context

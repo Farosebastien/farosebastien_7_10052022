@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import styles from "../../Styles/Components/Buttons/NavBtn.module.css";
+import styles from "./NavBtn.module.css";
 
 const NavBtn = (props) => {
     return (
