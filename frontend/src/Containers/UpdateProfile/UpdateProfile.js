@@ -6,8 +6,6 @@ import { useForm } from "../../Hooks/formHook";
 import { isEmail, MinLength, MaxLength, isText } from "../../Utils/validators";
 import { useWindowDimension } from "../../Hooks/windowHook";
 
-import ErrorModal from "../../Components/ErrorModal/ErrorModal";
-import ComfirmModal from "../../Components/ConfirmModal/ConfirmModal";
 import NavBtn from "../../Components/Buttons/NavBtn/NavBtn";
 import UIBtn from "../../Components/Buttons/UIBtn/UIBtn";
 import ImageUpload from "../../Components/ImageUpload/ImageUpload";
@@ -28,13 +26,11 @@ const UpdateProfile = () => {
     //Window size
     const { width } = useWindowDimension();
     //Backend request hook
-    const { isLoading, error, sendRequest, clearError } = useHttpRequest();
+    const { isLoading, sendRequest } = useHttpRequest();
     //Profile state
     const [userDataState, setUserDataState] = useState();
     //Delete message state
     const [showInfo, setShowInfo] = useState(false);
-    //Confirm modal state
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
     //Form useState
     const [formState, inputHandler, setFormState] = useForm(
         {
@@ -125,8 +121,6 @@ const UpdateProfile = () => {
             await sendRequest("http://localhost:5000/user/update", "PATCH", formData, {
                 Authorization: "Bearer " + auth.token,
             });
-
-            openConfirmModalHandler();
         } catch (err) {}
     };
 
@@ -146,9 +140,6 @@ const UpdateProfile = () => {
                     Authorization: "Bearer " + auth.token,
                 }
             );
-
-            // écran de confirmation
-            openConfirmModalHandler();
         } catch (err) {}
     };
 
@@ -176,18 +167,6 @@ const UpdateProfile = () => {
         } catch (err) {}
     };
 
-     //  Fonctions écran de confirmation
-     const openConfirmModalHandler = () => {
-        setShowConfirmModal(true);
-    };
-
-    const closeConfirmModalHandler = () => {
-        setShowConfirmModal(false);
-        setTimeout(() => {
-            history(`/profile/${auth.userId}`);
-        }, 300);
-    };
-
     //  Affichage Nav desktop
     let desktopNav;
 
@@ -213,7 +192,6 @@ const UpdateProfile = () => {
     if (!userDataState) {
         return (
             <>
-                <ErrorModal error={error} onClear={clearError} />
                 <div className={styles.container}>
                     <h2>No User Data!</h2>
                 </div>
@@ -223,8 +201,6 @@ const UpdateProfile = () => {
 
     return (
         <>
-            <ErrorModal error={error} onClear={clearError} />
-            <ComfirmModal show={showConfirmModal} message="Profil mis à jour" onCancel={closeConfirmModalHandler} />
             <div className={`container ${styles.class_mod}`}>
                 {!isLoading && userDataState && (
                     <div className={styles.wrapper}>

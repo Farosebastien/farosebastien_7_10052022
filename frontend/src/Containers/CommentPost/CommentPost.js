@@ -7,7 +7,6 @@ import { MinLength, MaxLength } from "../../Utils/validators";
 
 import send from "../../images/send-icon.svg";
 
-import ErrorModal from "../../Components/ErrorModal/ErrorModal";
 import Post from "../../Components/Post/Post";
 import Comment from "../../Components/Comment/Comment";
 import InputField from "../../Components/InputField/InputField";
@@ -21,7 +20,7 @@ const CommentPost = () => {
     //Post id
     const postId = useParams().id;
     //Backend Request Hook
-    const { isLoading, error, sendRequest, clearError } = useHttpRequest();
+    const { isLoading, sendRequest } = useHttpRequest();
     //Post Hook
     const [post, setPost] = useState();
     //Comment Hook
@@ -97,7 +96,6 @@ const CommentPost = () => {
     if (!post) {
         return (
             <>
-                <ErrorModal error={error} onClear={clearError} />
                 <div className={styles.container}>
                     <h2>No User Data!</h2>
                 </div>
@@ -107,7 +105,6 @@ const CommentPost = () => {
 
     return (
         <>
-            <ErrorModal error={error} onClear={clearError} />
             <div className="container">
                 {!isLoading && post && comments && (
                     <div className={styles.wrapper}>

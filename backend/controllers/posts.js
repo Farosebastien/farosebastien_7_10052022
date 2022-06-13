@@ -44,8 +44,7 @@ exports.createPost = (req, res, next) => {
     db.query(sql, (error, post) => {
         if(!error) {
             res.status(201).json({ 
-                message: "publication enregistrée",
-                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                message: "publication enregistrée"
             });
         } else {
             return next(new HttpError("erreur lors de la publication", 500));
@@ -59,7 +58,7 @@ exports.postReaction = (req, res, next) => {
     //Récupération du contenu de la requête
     const { post_id, reaction } = req.body;
     //Si la réaction est un like
-    if (reaction == 1) {
+    if (reaction == "1") {
         //Création de la requête pour envoyer ce nouveau like sur la DB
         const string = "INSERT INTO reactions (likes, users_id, posts_id) VALUES (1, ?, ?);";
         const inserts = [user.id, post_id];
@@ -68,8 +67,7 @@ exports.postReaction = (req, res, next) => {
         db.query(sql, (error, result) => {
             if (!error) {
                 res.status(201).json({ 
-                    message: "like ajouté",
-                    token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                    message: "like ajouté"
             });
             } else {
                 return next(new HttpError("erreur lors de l'ajout du like", 400));
@@ -85,8 +83,7 @@ exports.postReaction = (req, res, next) => {
         db.query(sql, (error, result) => {
             if(!error) {
                 res.status(201).json({ 
-                    message: "dislike ajouté",
-                    token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                    message: "dislike ajouté"
                 });
             } else {
                 return next(new HttpError("erreur lors de l'ajout du dislike", 400));
@@ -122,8 +119,7 @@ exports.postComment = (req, res, next) => {
             db.query(sql, (error, response) => {
                 if (!error) {
                     res.status(201).json({ 
-                        comment: response,
-                        token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                        comment: response
                     });
                 } else {
                     return next (new HttpError("erreur lors de la récupération du commentaire", 500));
@@ -143,7 +139,7 @@ exports.getAllPosts = (req, res, next) => {
         return new Promise ((resolve, reject) => {
             try {
                 //Création de la requête de récupération des posts qui les ordonne suivant leur date de modification
-                const string = "SELECT users.id, username, photo_url, posts.id AS post, content, image_url, post_date, modification_date FROM users INNER JOIN posts on users.id = posts.users_id ORDER BY post_date DESC;";
+                const string = "SELECT users.id AS user, username, photo_url, posts.id AS post, content, image_url, post_date, modification_date FROM users INNER JOIN posts on users.id = posts.users_id ORDER BY post_date DESC;";
                 const inserts = [];
                 const sql = mysql.format(string, inserts);
                 //Requête sql
@@ -339,8 +335,7 @@ exports.getAllPosts = (req, res, next) => {
     .then((result) => {
         //Envoi du résultat de la requête
         res.status(200).json({
-            posts: result,
-            token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+            posts: result
         });
     })
     //Si il y a une erreur, un message est affiché
@@ -357,7 +352,7 @@ exports.getMostLikedPosts = (req, res, next) => {
         return new Promise ((resolve, reject) => {
             try {
                 //Création de la requête de récupération des posts qui les ordonne suivant leur date de modification
-                const string = "SELECT users.id, username, photo_url, posts.id AS post, content, image_url, post_date, modification_date FROM users INNER JOIN posts on users.id = posts.users_id ORDER BY post_date DESC;";
+                const string = "SELECT users.id AS user, username, photo_url, posts.id AS post, content, image_url, post_date, modification_date FROM users INNER JOIN posts on users.id = posts.users_id ORDER BY post_date DESC;";
                 const inserts = [];
                 const sql = mysql.format(string, inserts);
                 //Requête sql
@@ -557,8 +552,7 @@ exports.getMostLikedPosts = (req, res, next) => {
     .then((results) => {
         //Envoi du résultat de la requête
         res.status(200).json({
-            posts: results,
-            token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+            posts: results
         });
     })
     //Si il y a une erreur, un message est affiché
@@ -597,8 +591,7 @@ exports.getOnePost = (req, res, next) => {
             //Récupération et envoi des résultat de la requête
             const results = [{...result[0][0], commentsCounter: result[1].length, liked: liked, disliked: disliked, usersLikedId: result[2], usersDislikesId: result[3]},{comments: result[1]}];
             res.status(200).json({
-                post: results,
-                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                post: results
             });
         //Si il y a une erreur, un message est affiché
         } else {
@@ -656,8 +649,7 @@ exports.updatePost = (req, res, next) => {
     db.query(sql, (error, result) => {
         if(!error) {
             res.status(201).json({ 
-                message: "publication mise à jour", 
-                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                message: "publication mise à jour"
             });
         //Si il y a une erreur, un message est affiché
         } else {
@@ -695,8 +687,7 @@ exports.updateComment = (req, res, next) => {
             db.query(sql, (error, response) => {
                 if (!error) {
                     res.status(201).json({
-                        comment: response,
-                        token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                        comment: response
                     });
                 //Si il y a une erreur, un message est affiché
                 } else {
@@ -729,8 +720,7 @@ exports.deleteComment = (req, res, next) => {
             db.query(sql, (error, result) => {
                 if (!error) {
                     res.status(200).json({ 
-                        message: "commentaire supprimé",
-                        token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                        message: "commentaire supprimé"
                     });
                 }
                 //Si il y a une erreur, un message est affiché
@@ -747,8 +737,7 @@ exports.deleteComment = (req, res, next) => {
             db.query(sql, (error, result) => {
                 if (!error) {
                     res.status(200).json({ 
-                        message: "commentaire supprimé",
-                        token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                        message: "commentaire supprimé"
                     });
                 }
                 //Si il y a une erreur, un message est affiché
@@ -793,8 +782,7 @@ exports.deletePost = (req, res, next) => {
                         db.query(sql, (error, result) => {
                             if (!error) {
                                 res.status(200).json({ 
-                                    message: "post supprimé",
-                                    token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                                    message: "post supprimé"
                                 });
                             }
                             //Si il y a une erreur, un message est affiché
@@ -808,8 +796,7 @@ exports.deletePost = (req, res, next) => {
                     db.query(sql, (error, result) => {
                         if (!error) {
                             res.status(200).json({ 
-                                message: "post supprimé",
-                                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                                message: "post supprimé"
                             });
                         }
                         //Si il y a une erreur, un message est affiché
@@ -836,8 +823,7 @@ exports.deletePost = (req, res, next) => {
                         db.query(sql, (error, result) => {
                             if (!error) {
                                 res.status(200).json({ 
-                                    message: "post supprimé",
-                                    token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                                    message: "post supprimé"
                                 });
                             }
                             //Si il y a une erreur, un message est affiché
@@ -851,8 +837,7 @@ exports.deletePost = (req, res, next) => {
                     db.query(sql, (error, result) => {
                         if (!error) {
                             res.status(200).json({ 
-                                message: "post supprimé",
-                                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                                message: "post supprimé"
                             });
                         }
                         //Si il y a une erreur, un message est affiché
@@ -880,8 +865,7 @@ exports.deleteReaction = (req, res, next) => {
         //Si il n'y a pas d'erreur, envoie d'un nouveau token
         if(!error) {
             res.status(200).json({
-                message: "réaction supprimée",
-                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                message: "réaction supprimée"
             });
         //Si il y a une erreur, un message est affiché
         } else {

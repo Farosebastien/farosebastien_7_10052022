@@ -1,7 +1,7 @@
 .header {
     display: flex;
     flex-direction: row;
-    background-color: white;
+    background-color: #ffd7d7;
     padding-bottom: 1.6rem;
 }
 
@@ -12,10 +12,11 @@
     overflow-y: scroll;
     padding: 0 2rem;
     border-radius: 0 0 5rem 5rem;
+    background-color: #ffd7d7;
 }
 
 .btn {
-    background-color: #ebebeb;
+    background-color: #ffd7d7;
     font-size: 1.49rem;
     font-weight: 500;
     width: 50%;
@@ -23,11 +24,11 @@
     border: 0;
 }
 .text {
-    color: #6f6f6f;
+    color: #fd2d01;
     margin: 1.5rem 0 auto auto;
 }
 .icon {
-    filter: invert(55%) sepia(13%) saturate(0%) hue-rotate(286deg) brightness(90%) contrast(94%);
+    filter: invert(28%) sepia(67%) saturate(6134%) hue-rotate(4deg) brightness(100%) contrast(104%);
     height: 2rem;
     margin: 1.2rem auto auto 1rem;
 }
@@ -41,5 +42,5 @@
 }
 
 .container::-webkit-scrollbar-thumb {
-    background: #c30000;
+    background: #fd2d01;
 }

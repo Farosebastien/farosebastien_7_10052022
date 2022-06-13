@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-//import withRouter from "../../Hooks/withRouter";
 import { AuthContext } from "../../Context/authContext";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import NavHome from "./NavHome";
@@ -14,24 +13,12 @@ import NavUpdate from "./NavUpdate";
 
 import "./Nav.css";
 
-function withRouter(Component) {
-    function ComponentWithRouterProps(props) {
-        const location = useLocation();
-        const navigate = useNavigate();
-        const params = useParams();
-        return (
-            <Component {...props} router={{ location, navigate, params }} />
-        );
-    }
-    return ComponentWithRouterProps;
-}
-
 const Nav = (props) => {
     const auth = useContext(AuthContext);
     const path = useLocation().pathname;
     const history = useNavigate();
 
-    const id = useParams();
+    const id = Number(useParams().id);
 
     const backHandle = (e) => {
         e.preventDefault();

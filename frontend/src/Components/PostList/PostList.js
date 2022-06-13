@@ -4,7 +4,7 @@ import Post from "../Post/Post";
 import styles from "./PostList.module.css";
 
 const PostList = (props) => {
-    if (props.items.length === 0) {
+    if (props.items.posts.length === 0) {
         return (
             <div className={styles.container}>
                 <h2>Pas de Posts !!</h2>
@@ -14,9 +14,9 @@ const PostList = (props) => {
 
     return (
         <>
-            {props.items.map((post) => {
+            {props.items.posts.map((post) => {
                 return (
-                    <Post key={post.post_id} id={post.post_id} user_id={post.user_id} photo_url={post.photo_url} username={post.username} date={post.date} content={post.content} image_url={post.image_url} likes={post.likes} dislikes={post.dislikes} comments={post.comments} userReaction={post.userReaction} post_link={`/post/${post.post_id}`} onDelete={props.onDeletePost} />
+                    <Post key={post.post} id={post.post} user_id={post.user} photo_url={post.photo_url} username={post.username} date={post.post_date} content={post.content} image_url={post.image_url} likes={post.likes} dislikes={post.dislikes} comments={post.commentsCounter} liked={post.liked} disliked={post.disliked} post_link={`/post/${post.post}`} onDelete={props.onDeletePost} />
                 );
             })}
         </>

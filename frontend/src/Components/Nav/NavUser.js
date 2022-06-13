@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../Context/authContext";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import back from "../../images/back-icon.svg";
 import modify from "../../images/modify-icon.svg";
 
@@ -8,8 +8,7 @@ import NavBtn from "./../Buttons/NavBtn/NavBtn";
 
 const NavUser = (props) => {
     const auth = useContext(AuthContext);
-    const path = useLocation()
-    const userId = Number(path.split("/")[2]);
+    const userId = Number(useParams().id);
 
     let modifyBtn;
 

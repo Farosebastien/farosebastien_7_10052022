@@ -7,12 +7,10 @@ import { AuthContext } from "../../Context/authContext";
 //Images
 import Genprofile from "../../images/generic_profile_picture.jpg";
 import person from "../../images/person-icon.svg";
-import agenda from "../../images/agenda-icon.svg";
 import logout from "../../images/logout-icon.svg";
 import posts from "../../images/posts-icon.svg";
 
 //Components
-import ErrorModal from "./../../Components/ErrorModal/ErrorModal";
 import Spinner from "./../../Components/LoadingSpinner/LoadingSpinner";
 
 import styles from "./Menu.module.css"
@@ -21,7 +19,7 @@ const Menu = () => {
     //Auth context
     const auth = useContext(AuthContext);
     //Requête back
-    const { isloading, error, sendRequest, clearError } = useHttpRequest();
+    const { isloading, sendRequest } = useHttpRequest();
     //Taille de la fenêtre
     const { width } = useWindowDimension();
     //Historique
@@ -58,7 +56,7 @@ const Menu = () => {
             <>
                 <Link to="/post" className={`${styles.btn} ${styles.border}`}>
                     <span className={styles.text}>Publications</span>
-                    <img className={`${styles.icon} icon_white`} src={posts} alt="" />
+                    <img className={styles.icon} src={posts} alt="" />
                 </Link>
             </>
         );
@@ -77,7 +75,6 @@ const Menu = () => {
     if (!profileData) {
         return (
             <>
-                <ErrorModal error={error} onClear={clearError} />
                 <div className={styles.container}>
                     <h2>No User Data!</h2>
                 </div>
@@ -86,36 +83,29 @@ const Menu = () => {
     }
     return (
         <>
-            <ErrorModal error={error} onClear={clearError} />
-            <>
-                {!isloading && profileData && (
-                    <div className={styles.cover}>
-                        <div className={styles.background_img}></div>
-                        <div className={styles.wrapper}>
-                            <img src={profileData.photo_url || Genprofile} className={styles.profile_photo} alt={`${profileData.username}`} />
-                            <div className={styles.hero_block}>
-                                <h2 className={styles.title}> Bienvenue {profileData.username} !</h2>
-                            </div>
+            {!isloading && profileData && (
+                <div className={styles.cover}>
+                    <div className={styles.background_img}></div>
+                    <div className={styles.wrapper}>
+                        <img src={profileData.profile.photo_url || Genprofile} className={styles.profile_photo} alt={`${profileData.profile.username}`} />
+                        <div className={styles.hero_block}>
+                            <h2 className={styles.title}> Bienvenue {profileData.profile.username} !</h2>
                         </div>
-                        <nav className={styles.list}>
-                            <Link to={`user/${auth.userId}`} className={`${styles.btn} ${styles.border}`}>
-                                <span className={styles.text}>Mon profil</span>
-                                <img className={`${styles.icon} icon_white`} src={person} alt="" />
-                            </Link>
-                            {navlinks}
-                            <Link to="/post" className={`${styles.btn} ${styles.border}`}>
-                                <span className={styles.text}>Annuaire</span>
-                                <img className={`${styles.icon} icon_white`} src={agenda} alt="" />
-                            </Link>
-                            <button className={`${styles.btn} ${styles.logout_margin}`} onClick={logoutHandler}>
-                                <span className={styles.text}>Se déconnecter</span>
-                                <img className={`${styles.icon} icon_white`} src={logout} alt="" />
-                            </button>
-                        </nav>
                     </div>
-                )}
-            </>
-        </>
+                    <nav className={styles.list}>
+                        <Link to={`user/${auth.userId}`} className={`${styles.btn} ${styles.border}`}>
+                            <span className={styles.text}>Mon profil</span>
+                            <img className={styles.icon} src={person} alt="" />
+                        </Link>
+                        {navlinks}
+                        <button className={`${styles.btn} ${styles.logout_margin}`} onClick={logoutHandler}>
+                            <span className={styles.text}>Se déconnecter</span>
+                            <img className={styles.icon} src={logout} alt="" />
+                        </button>
+                    </nav>
+                </div>
+            )}
+        </>   
     );
 };
 

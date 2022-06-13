@@ -22,26 +22,32 @@ const App = () => {
 
   let routes;
 
-  if (token) {
+  /*if (token) {
     routes = (
       <Routes>
-        <Route path="/post" exact component={Posts} />
-        <Route path="/post/new" component={NewPost} />
-        <Route path="/menu" component={Menu} />
-        <Route path="/user/:id" component={UserProfile} />
-        <Route path="/user/:id/update" component={UpdateProfile} />
-        <Route path="/post/:id" component={CommentPost} />
+        <Route path="/post" element={<Posts />} />
+        <Route path="/post/new" component={<NewPost />} />
+        <Route path="/menu" component={<Menu />} />
+        <Route path="/user/:id" component={<UserProfile />} />
+        <Route path="/user/:id/update" component={<UpdateProfile />} />
+        <Route path="/post/:id" component={<CommentPost />} />
       </Routes>
-    );
-  } else {
+    );*/
+  //} else {
     routes = (
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/post" element={<Posts />} />
+        <Route path="/post/new" component={<NewPost />} />
+        <Route path="/menu" component={<Menu />} />
+        <Route path="/user/:id" element={<UserProfile />} />
+        <Route path="/user/:id/update" component={<UpdateProfile />} />
+        <Route path="/post/:id" element={<CommentPost />} />
       </Routes>
     );
-  }
+  //}
   
   return (
     <AuthContext.Provider

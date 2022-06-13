@@ -5,13 +5,12 @@
 }
 
 .background_img {
-    background: rgba(0, 0, 0) url(../../../images/background.jpg) center no-repeat;
+    background: rgba(0, 0, 0) url(../../images/background.jpg) center no-repeat;
     background-size: cover;
     position: absolute;
     height: 150px;
     width: 100%;
     resize: both;
-    border-radius: 0 0 5rem 5rem;
 }
 
 .wrapper {
@@ -19,6 +18,7 @@
     flex-direction: column;
     width: 100%;
     padding: 0 3rem;
+    background-color: #ffd7d7;
 }
 
 .profile_photo {
@@ -27,38 +27,33 @@
     height: 15rem;
     object-fit: cover;
     margin: 4rem auto 0 auto;
-    border-radius: 3.5rem;
+    border-radius: 2.5rem;
 }
 
 .hero_block {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin: 6vh auto 0 auto;
 }
 
 .title {
     text-align: center;
-    margin: 0;
+    margin-bottom: 50px;
+    color: #4e5166;
 }
 
-.Linkedin_icon {
-    width: 2rem;
-    margin: 0.4rem 0 auto 1.6rem;
-}
-
-.department {
+.username{
     text-align: center;
-    font-weight: 500;
-    font-size: 1.4rem;
-    color: #828282;
-    margin: 2vh 0 0 0;
+    margin: 0;
+    color: #4e5166;
 }
 
 .role {
     text-align: center;
-    font-weight: 500;
+    font-weight: bold;
     line-height: 160%;
     margin: auto;
+    color: #4e5166;
 }
 
 .email {
@@ -71,7 +66,7 @@
 }
 
 .btnStyle {
-    color: #c30000;
+    color: #4e5166;
     margin: auto;
     cursor: pointer;
 }
@@ -80,6 +75,8 @@
     height: 2.4rem;
     width: auto;
     margin: 0 1rem 0 0;
+    filter: invert(31%) sepia(8%) saturate(1230%) hue-rotate(195deg) brightness(94%) contrast(87%);
+
 }
 
 .nav {

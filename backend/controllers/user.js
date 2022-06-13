@@ -48,8 +48,7 @@ exports.getUser = (req, res, next) => {
         //Si il y a une erreur c'est que l'utilisateur n'est pas trouvé
         } else {
             res.status(200).json({
-                profile: profile[0],
-                token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                profile: profile[0]
             });
         }
     });
@@ -104,8 +103,7 @@ exports.updateUser = (req, res, next) => {
         db.query(sql, (error, profile) => {
             if(!error) {
                 res.status(200).json({ 
-                    message: "profil mis à jour",
-                    token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                    message: "profil mis à jour"
                 });
             //Si il y a une erreur, la mise à jour a échouée
             } else {
@@ -141,8 +139,7 @@ exports.updateUserPassword = (req, res, next) => {
             db.query(sql, (error, password) => {
                 if(!error) {
                     res.status(201).json({ 
-                        message: "mot de passe mis à jour",
-                        token: jwt.sign({ userId: user.id, account: user.role }, process.env.JWT_SECRET_KEY, {expiresIn: "5m"})
+                        message: "mot de passe mis à jour"
                     });
                 //Si il y a une erreur, la mise à jour a échouée
                 } else {

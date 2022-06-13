@@ -1,13 +1,14 @@
 .block {
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid #bdbdbd;
+    border-bottom: 1px solid #fd2d01;
     margin-bottom: 16px;
 }
 
 .title {
     text-align: left;
     margin: 6px 0 16px 0;
+    color: #4e5166;
 }
 
 .photo {
@@ -19,6 +20,7 @@
     display: flex;
     flex-direction: row;
     margin: 16px 0;
+    color: #4e5166;
 }
 
 .comments_btn {
@@ -39,7 +41,7 @@
 }
 
 .comment_btn {
-    background-color: white;
+    background-color: #ffd7d7;
     display: flex;
     flex-direction: row;
     font-weight: bold;
@@ -57,5 +59,6 @@
 
     .title {
         font-size: 2.3rem;
+        color: #4e5166;
     }
 }

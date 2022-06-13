@@ -1,7 +1,7 @@
 .block {
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid #c4c4c4;
+    border-bottom: 1px solid #fd2d01;
     margin-bottom: 1.6rem;
     width: 100%;
 }
@@ -11,7 +11,7 @@
 }
 
 .invalid {
-    border-bottom: 1px solid #c30000;
+    border-bottom: 1px solid #fd2d01;
 }
 
 .label {
@@ -23,7 +23,7 @@
     font-size: 1.2rem;
     font-weight: 500;
     margin: 0;
-    color: #ff6c6c;
+    color: #fd2d01;
     margin-bottom: 1rem;
 }
 
@@ -40,6 +40,7 @@
 .textarea {
     margin-top: 1.1rem;
     resize: none;
+    color:#ffd7d7;
 }
 
 .icon {
@@ -52,7 +53,7 @@
     font-family: "Montserrat", "Roboto";
     font-size: 1.5rem;
     font-weight: 500;
-    color: black;
+    color: white;
     width: 100%;
     padding: 0;
     background-color: transparent;
@@ -66,18 +67,18 @@
 
 .box::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #6b6b6b;
+    color: white;
     opacity: 1; /* Firefox */
 }
 
 .box:-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: #6b6b6b;
+    color: white;
 }
 
 .box::-ms-input-placeholder {
     /* Microsoft Edge */
-    color: #6b6b6b;
+    color: white;
 }
 
 .white_box {

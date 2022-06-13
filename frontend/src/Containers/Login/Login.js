@@ -11,7 +11,7 @@ import person from "../../images/person-icon.svg";
 
 import InputField from "../../Components/InputField/InputField";
 
-import "./Home.css";
+import "../Home/Home.css";
 
 const Login = () => {
     //Authentification Context
@@ -47,7 +47,6 @@ const Login = () => {
                 email: formState.inputs.email.value,
                 password: formState.inputs.password.value
             };
-            console.log(data)
 
             const responseData = await sendRequest("http://localhost:5000/login", "POST", JSON.stringify(data), { "Content-Type": "application/json"});
             auth.login(responseData.userId, responseData.token, responseData.account);

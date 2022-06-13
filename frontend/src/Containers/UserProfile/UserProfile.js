@@ -8,9 +8,7 @@ import GenProfile from "../../images/generic_profile_picture.jpg";
 import modify from "../../images/modify-icon.svg";
 import back from "../../images/back-icon.svg";
 
-import ErrorModal from "../../Components/ErrorModal/ErrorModal";
 import NavBtn from "../../Components/Buttons/NavBtn/NavBtn";
-import Counter from "../../Components/Counter/Counter";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
 import styles from "./UserProfile.module.css";
@@ -19,7 +17,7 @@ const UserProfile = () => {
     //Auth context
     const auth = useContext(AuthContext);
     //Backend request hook
-    const { isLoading, error, sendRequest, clearError } = useHttpRequest();
+    const { isLoading, sendRequest } = useHttpRequest();
     //Profile Hook
     const [profileData, setProfileData] = useState();
     //Window size
@@ -40,7 +38,7 @@ const UserProfile = () => {
     }, [sendRequest, auth.token, userId]);
 
     let btnStyle = styles.btnStyle;
-    let iconStyle = `${styles.iconStyle} icon_red`;
+    let iconStyle = styles.iconStyle;
     let desktopNav;
 
     // Affichage Nav Desktop
@@ -77,32 +75,35 @@ const UserProfile = () => {
     if (!profileData) {
         return (
             <>
-                <ErrorModal error={error} onClear={clearError} />
                 <div className={styles.container}>
                     <h2>No User Data!</h2>
                 </div>
             </>
         );
     }
+    let role;
+    if(profileData.profile.role === 0) {
+        role ="Utilisateur";
+    } else {
+        role = "Administrateur"
+    }
 
     return (
         <>
-            <ErrorModal error={error} onClear={clearError} />
             <div className={`container ${styles.class_mod}`}>
                 {!isLoading && profileData && (
                     <>
                         <div className={styles.background_img}></div>
                         <div className={styles.wrapper}>
-                            <img src={profileData.photo_url || GenProfile} className={styles.profile_photo} alt={`${profileData.username}`} />
+                            <img src={profileData.profile.photo_url || GenProfile} className={styles.profile_photo} alt={`${profileData.profile.username}`} />
                             <div className={styles.hero_block}>
-                                <h2 className={styles.title}>{profileData.firstName} {profileData.lastName}</h2>
-                                <h3 className={styles.title}>{profileData.username}</h3>
+                                <h2 className={styles.title}>{profileData.profile.firstname} {profileData.profile.lastname}</h2>
+                                <h3 className={styles.username}>{profileData.profile.username}</h3>
                             </div>
-                            <p className={styles.role}>{profileData.role}</p>
-                            <a className={styles.email} href={`mailto:${profileData.email}`}>
-                                {profileData.email}
+                            <p className={styles.role}>{role}</p>
+                            <a className={styles.email} href={`mailto:${profileData.profile.email}`}>
+                                {profileData.profile.email}
                             </a>
-                            <Counter likesCount={profileData.likesCount || 0} postsCount={profileData.postsCount || 0} />
                             {desktopNav}
                         </div>
                     </>

@@ -23,83 +23,107 @@ const Post = (props) => {
     const [likesCounter, setLikesCounter] = useState(props.likes);
     //User Dislikes
     const [dislikesCounter, setDislikesCounter] = useState(props.dislikes);
-    //UserReaction
-    const [userReaction, setUserReaction] = useState(props.userReaction);
-    //Liked
-    const [liked, setLiked] = useState(props.liked);
-    //Disliked
-    const [disliked, setDisliked] = useState(props.disliked);
+    //UserReactions
+    let [liked, setLiked] = useState(props.liked);
+    let [disliked, setDisliked] = useState(props.disliked);
+    
+    const date = new Date(props.date);
+    const datePost = date.getDate()+'/' + (date.getMonth()+1) + '/'+date.getFullYear() + '  ' + (date.getHours()-2) + 'h'+date.getMinutes();
 
-    //Réaction handler
-    const userReactionHandler = (event) => {
+    
+    //Reaction handler like
+    const userLikeHandler = (event) => {
         event.preventDefault();
-        let reaction;
-        switch (userReaction) {
-            case null:
-                if (event.currentTarget.name === 1) {
-                    setLikesCounter(likesCounter + 1);
-                    reaction = event.currentTarget.name;
-                } else {
-                    setDislikesCounter(dislikesCounter + 1);
-                    reaction = event.currentTarget.name;
-                }
-                setUserReaction(event.currentTarget.name);
-                setLiked(true);
-                setDisliked(true);
-                break;
-            case "null":
-                if (event.currentTarget.name === 1) {
-                    setLikesCounter(likesCounter + 1);
-                    reaction = event.currentTarget.name;
-                } else {
-                    setDislikesCounter(dislikesCounter + 1);
-                    reaction = event.currentTarget.name;
-                }
-                setUserReaction(event.currentTarget.name);
-                break;
-            case 1:
-                if (event.currentTarget.name === 1) {
+        if (!disliked) {
+            switch (liked) {
+                case true:
                     setLikesCounter(likesCounter - 1);
-                    setUserReaction("null");
-                    reaction = "null";
-                } else {
-                    setLikesCounter(likesCounter - 1);
-                    setDislikesCounter(dislikesCounter + 1);
-                    setUserReaction(event.currentTarget.name);
-                    reaction = event.currentTarget.name;
-                }
-                break;
-            case -1:
-                if (event.currentTarget.name === -1) {
-                    setDislikesCounter(dislikesCounter - 1);
-                    setUserReaction("null");
-                    reaction = "null";
-                } else {
+                    setLiked(liked = false);
+                    fetch (`http://localhost:5000/post/reaction`, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json", Authorization: "Bearer " + auth.token },
+                        body: JSON.stringify({
+                            posts_id: props.id
+                        }),
+                    })
+                    .then((response) => {
+                        if (response.ok) {
+                            return;
+                        }
+                    })
+                    .catch((err) => console.log(err));
+                    break;
+                case false:
                     setLikesCounter(likesCounter + 1);
-                    setDislikesCounter(dislikesCounter - 1);
-                    setUserReaction(event.currentTarget.name);
-                    reaction = event.currentTarget.name;
-                }
-                break;
-            default:
-                console.log("an error was produced in userReactionHandler function on post component");
-                break;
-        }
-
-        fetch (`http://localhost:5000/post/reaction`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: "Bearer " + auth.token },
-            body: JSON.stringify({
-                post_id: props.id,
-                reaction: reaction
-            }),
-        })
-        .then((response) => {
-            if (response.ok) {
-                return;
+                    setLiked(liked = true);
+                    fetch (`http://localhost:5000/post/reaction`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", Authorization: "Bearer " + auth.token },
+                        body: JSON.stringify({
+                            post_id: props.id,
+                            reaction: 1
+                        }),
+                    })
+                    .then((response) => {
+                        if (response.ok) {
+                            console.log(response)
+                            return;
+                        }
+                    })
+                    .catch((err) => console.log(err));
+                    break;
+                default:
+                    console.log("an error was produced in userReactionHandler function on post component");
+                    break;
             }
-        })
-        .catch((err) => console.log(err));
+        }
+    };
+
+    //Reaction handler dislike
+    const userDislikeHandler = (event) => {
+        event.preventDefault();
+        if (!liked) {
+            switch (disliked) {
+                case true:
+                    setDislikesCounter(dislikesCounter - 1);
+                    setDisliked(disliked = false);
+                    fetch (`http://localhost:5000/post/reaction`, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json", Authorization: "Bearer " + auth.token },
+                        body: JSON.stringify({
+                            posts_id: props.id
+                        }),
+                    })
+                    .then((response) => {
+                        if (response.ok) {
+                            return;
+                        }
+                    })
+                    .catch((err) => console.log(err));
+                    break;
+                case false:
+                    setDislikesCounter(dislikesCounter + 1);
+                    setDisliked(disliked = true);
+                    fetch (`http://localhost:5000/post/reaction`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", Authorization: "Bearer " + auth.token },
+                        body: JSON.stringify({
+                            post_id: props.id,
+                            reaction: -1
+                        }),
+                    })
+                    .then((response) => {
+                        if (response.ok) {
+                            return;
+                        }
+                    })
+                    .catch((err) => console.log(err));
+                    break;
+                default:
+                    console.log("an error was produced in userReactionHandler function on post component");
+                    break;
+            }
+        }
     };
 
     //Delete post
@@ -120,10 +144,10 @@ const Post = (props) => {
     };
     //Type de visualisation sur Post et CommentPost
     let commentBlock;
-    if(props.router.location.pathname === "/post") {
+    if(path === "/post") {
         commentBlock = (
             <>
-                <ReactionBtn btnType="decor" icon="commments" text={props.comments} styling="" reaction={null} />
+                <ReactionBtn btnType="decor" icon="comments" text={props.comments} styling="" reaction={null} />
                 <ReactionBtn btnType="link" link={props.post_link} reaction={null} icon="comment" text="commenter" styling={styles.comment_btn} />
             </>
         );
@@ -140,13 +164,13 @@ const Post = (props) => {
                     <Spinner asOverlay />
                 </div>
             )}
-            <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={props.post_date} onDelete={DeletePostHandler} />
+            <UserHeader user_id={props.user} photo_url={props.photo_url} username={props.username} date={datePost} onDelete={DeletePostHandler} />
             <section className={styles.block}>
                 <h3 className={styles.title}>{props.content}</h3>
-                <img className={styles.photo} src={props.image_url} alt="post" />
+                {props.image_url === !null ? (<img className={styles.photo} src={props.image_url} alt="post" />) : null}
                 <footer className={styles.reactions}>
-                    <ReactionBtn btnType="functionnal" name="like" onReaction={userReactionHandler} reaction={liked === true ? 1 : null} icon="like" text={likesCounter} styling="" />
-                    <ReactionBtn btnType="functionnal" name="dislike" onReaction={userReactionHandler} reaction={disliked === true ? -1 : null} icon="dislike" text={dislikesCounter} styling="" />
+                    <ReactionBtn btnType="functional" name="like" onReaction={userLikeHandler} reaction={liked === true ? 1 : null} icon="like" text={likesCounter} styling="" />
+                    <ReactionBtn btnType="functional" name="dislike" onReaction={userDislikeHandler} reaction={disliked === true ? -1 : null} icon="dislike" text={dislikesCounter} styling="" />
                     {commentBlock}
                 </footer>
             </section>

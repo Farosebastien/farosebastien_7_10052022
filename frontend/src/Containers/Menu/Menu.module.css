@@ -2,14 +2,13 @@
     position: absolute;
     height: 150px;
     width: 100%;
-    background: rgba(0, 0, 0) url(../../../images/background.jpg) center no-repeat;
+    background: rgba(0, 0, 0) url(../../images/background.jpg) center no-repeat;
     background-size: cover;
     resize: both;
-    border-radius: 0 0 5rem 5rem;
 }
 
 .cover {
-    background-color: #c30000;
+    background-color: #ffd7d7;
     height: 88vh;
 }
 
@@ -18,7 +17,7 @@
     flex-direction: column;
     padding: 0 4rem;
     height: 50vh;
-    background-color: white;
+    background-color: #ffd7d7;
     border-radius: 0 0 5rem 5rem;
 }
 
@@ -26,7 +25,7 @@
     margin: 4rem auto 0 auto;
     width: 15rem;
     height: 15rem;
-    border-radius: 3.5rem;
+    border-radius: 2.5rem;
     object-fit: cover;
     filter: drop-shadow(0px 4px 15px rgba(0, 0, 0, 0.25));
 }
@@ -42,6 +41,7 @@
     font-size: 2.6rem;
     text-align: center;
     margin: auto;
+    color:#4e5166;
 }
 
 .list {
@@ -67,19 +67,20 @@
 }
 
 .border {
-    border-bottom: 1px solid #e02929;
+    border-bottom: 1px solid #fd2d01;
 }
 
 .text {
     font-weight: 400;
     font-size: 1.6rem;
-    color: white;
+    color: #4e5166;
     margin: auto auto auto 0;
 }
 
 .icon {
     height: 20px;
     margin: auto 0;
+    filter: invert(31%) sepia(8%) saturate(1230%) hue-rotate(195deg) brightness(94%) contrast(87%);
 }
 
 @media only screen and (min-width: 1024px) {

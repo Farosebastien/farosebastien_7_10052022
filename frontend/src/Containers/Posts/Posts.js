@@ -3,7 +3,6 @@ import { AuthContext } from "../../Context/authContext";
 import { Link } from "react-router-dom";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import { useWindowDimension } from "../../Hooks/windowHook";
-import ErrorModal from "../../Components/ErrorModal/ErrorModal"
 import TabBtn from "../../Components/Buttons/TabBtn/TabBtn";
 import PostList from "../../Components/PostList/PostList";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
@@ -20,7 +19,7 @@ const Posts = () => {
     //Window size
     const { width } = useWindowDimension();
     //Request Hook
-    const { isLoading, error, sendRequest, clearError } = useHttpRequest();
+    const { isLoading, sendRequest } = useHttpRequest();
     //Post state
     const [posts, setPosts] = useState();
     const [activeBtn, setActiveBtn] = useState({
@@ -81,7 +80,6 @@ const Posts = () => {
 
     return (
         <>
-            <ErrorModal error={error} onClear={clearError} />
             <nav className={styles.header}>
                 <TabBtn name="Les plus récents" icon={clockIcon} active={activeBtn.mostRecents} onClick={fetchMostRecent} />
                 <TabBtn name="Les plus aimés" icon={coffeeIcon} active={activeBtn.mostLiked} onClick={fetchMostLiked} />

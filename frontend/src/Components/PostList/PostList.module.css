@@ -1,7 +1,7 @@
 .header {
     display: flex;
     flex-direction: row;
-    background-color: white;
+    background-color: #ffd7d7;
     padding-bottom: 1.6rem;
 }
 
@@ -10,7 +10,7 @@
     flex-direction: column;
     height: 77.4vh;
     overflow-y: scroll;
-    background-color: white;
+    background-color: #ffd7d7;
     border-radius: 0 0 5rem 5rem;
     padding: 0 2rem;
 }
@@ -24,5 +24,5 @@
 }
 
 .container::-webkit-scrollbar-thumb {
-    background: #c30000;
+    background: #fd2d01;
 }

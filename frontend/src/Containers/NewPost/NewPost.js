@@ -8,7 +8,6 @@ import { MinLength, MaxLength } from "../../Utils/validators";
 
 import backIcon from "../../images/back-icon.svg";
 
-import ErrorModal from "../../Components/ErrorModal/ErrorModal";
 import UIBtn from "../../Components/Buttons/UIBtn/UIBtn";
 import ImageUpload from "../../Components/ImageUpload/ImageUpload";
 import InputField from "../../Components/InputField/InputField";
@@ -21,7 +20,7 @@ const NewPost = (props) => {
     const auth = useContext(AuthContext);
     //History
     const history = useNavigate();
-    const { isLoading, error, sendRequest, clearError } = useHttpRequest();
+    const { isLoading, sendRequest } = useHttpRequest();
     //Window Size
     const { width } = useWindowDimension();
     //FormState
@@ -94,7 +93,6 @@ const NewPost = (props) => {
 
     return (
         <>
-            <ErrorModal error={error} onClear={clearError} />
             {!isLoading && (
                 <>
                     <header classNmae={styles.head}>

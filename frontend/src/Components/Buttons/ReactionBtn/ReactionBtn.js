@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import like from "../../images/like-icon.svg";
-import dislike from "../../images/dislike-icon.svg";
-import comment from "../../images/comment-icon.svg";
-import comments from "../../images/comments-icon.svg";
+import like from "../../../images/like-icon.svg";
+import dislike from "../../../images/dislike-icon.svg";
+import comment from "../../../images/comment-icon.svg";
+import comments from "../../../images/comments-icon.svg";
 
 import styles from "./ReactionBtn.module.css";
 
@@ -13,10 +13,10 @@ const ReactionBtn = (props) => {
     let reactionColor = "";
 
     switch (props.reaction) {
-        case "1":
+        case 1:
             reactionColor = "icon_green";
             break;
-        case "-1":
+        case -1:
             reactionColor = "icon_red";
             break;
         case null:
