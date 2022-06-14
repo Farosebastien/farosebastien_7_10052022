@@ -41,7 +41,7 @@
 }
 
 .comment_btn {
-    background-color: #ffd7d7;
+    background-color: white;
     display: flex;
     flex-direction: row;
     font-weight: bold;
@@ -58,7 +58,7 @@
     }
 
     .title {
-        font-size: 2.3rem;
+        font-size: 1.6rem;
         color: #4e5166;
     }
 }

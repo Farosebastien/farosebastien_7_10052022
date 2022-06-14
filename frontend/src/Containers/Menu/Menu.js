@@ -89,7 +89,7 @@ const Menu = () => {
                     <div className={styles.wrapper}>
                         <img src={profileData.profile.photo_url || Genprofile} className={styles.profile_photo} alt={`${profileData.profile.username}`} />
                         <div className={styles.hero_block}>
-                            <h2 className={styles.title}> Bienvenue {profileData.profile.username} !</h2>
+                            <h2 className={styles.title}> Bienvenue {profileData.profile.firstname} !</h2>
                         </div>
                     </div>
                     <nav className={styles.list}>

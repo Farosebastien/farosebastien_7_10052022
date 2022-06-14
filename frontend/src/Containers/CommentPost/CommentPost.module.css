@@ -50,3 +50,38 @@
     background-color: transparent;
     border: 0;
 }
+.reactions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;;
+    border: 2px solid #ffd7d7 ;
+    border-radius: 20px 20px 20px 20px;
+    margin-bottom: 2em;
+}
+
+.likersDiv{
+    display: flex;
+    flex-direction: row;
+    color: green;
+}
+
+.title{
+    align-self: center;
+    margin-right: 1.5em;
+}
+
+.dislikersDiv{
+    display: flex;
+    color: red;
+}
+
+.likers{
+    color: black;
+    font-size: small;
+    
+}
+
+.dislikers{
+    color: black;
+    font-size: small;
+}

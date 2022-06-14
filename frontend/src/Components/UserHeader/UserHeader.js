@@ -13,7 +13,7 @@ const UserHeader = (props) => {
     const auth = useContext(AuthContext);
     let deleteBtn;
     //vérification si admin ou publicateur pour le bouton supprimer
-    if (auth.userId === props.userId || auth.account === 1) {
+    if (auth.userId === props.user_id || auth.account === "admin") {
         deleteBtn = (
             <button className={styles.delete_btn} onClick={props.onDelete}>
                 <img className={styles.delete_icon} src={DeleteX} alt="delete_icon" />
@@ -22,6 +22,9 @@ const UserHeader = (props) => {
     } else {
         deleteBtn = "";
     }
+    console.log(auth.userId)
+    console.log(props.user_id)
+    console.log(auth.account)
 
     return (
         <header className={styles.block}>
@@ -30,7 +33,8 @@ const UserHeader = (props) => {
                 {props.username}
             </Link>
             <p className={styles.text}>
-                <span className={styles.text_division}>{props.date}</span>
+                <span className={styles.text_division}>posté le: {props.date}</span>
+                {props.modifyDate === null ? null : (<span className={styles.text_division}>modifié le: {props.modifyDate}</span>)}
             </p>
             {deleteBtn}
         </header>

@@ -10,24 +10,24 @@
 .container_active {
     display: flex;
     height: 4.7rem;
-    border-bottom: 2px solid #c30000;
+    border-bottom: 2px solid #fd2d01;
     margin: auto 1.6rem;
     cursor: pointer;
 }
 
 .icon_active {
-    filter: invert(8%) sepia(96%) saturate(5030%) hue-rotate(358deg) brightness(124%) contrast(113%);
+    filter: invert(27%) sepia(87%) saturate(5156%) hue-rotate(5deg) brightness(102%) contrast(105%);
     height: 2rem;
     margin: 1.2rem auto auto 1rem;
 }
 
 .text_active {
-    color: #c30000;
+    color: #fd2d01;
     margin: 1.5rem 0 auto auto;
 }
 
 .btn {
-    background-color: #f4f4f8;
+    background-color: #ffd7d7;
     font-size: 1.49rem;
     font-weight: 500;
     width: 50%;

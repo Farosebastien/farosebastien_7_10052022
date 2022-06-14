@@ -28,8 +28,16 @@ const Post = (props) => {
     let [disliked, setDisliked] = useState(props.disliked);
     
     const date = new Date(props.date);
-    const datePost = date.getDate()+'/' + (date.getMonth()+1) + '/'+date.getFullYear() + '  ' + (date.getHours()-2) + 'h'+date.getMinutes();
+    const datePost = date.getDate()+'/' + (date.getMonth()+1) + '/'+date.getFullYear() + '  ' + date.getHours() + 'h'+date.getMinutes();
 
+    let modifyDatePost;
+
+    if (props.modifyDate != null) {
+        const modifyDate = new Date(props.modifyDate);
+        modifyDatePost = modifyDate.getDate()+'/' + (modifyDate.getMonth()+1) + '/'+modifyDate.getFullYear() + '  ' + modifyDate.getHours() + 'h'+modifyDate.getMinutes();
+    } else {
+        modifyDatePost = null;
+    }
     
     //Reaction handler like
     const userLikeHandler = (event) => {
@@ -66,14 +74,13 @@ const Post = (props) => {
                     })
                     .then((response) => {
                         if (response.ok) {
-                            console.log(response)
                             return;
                         }
                     })
                     .catch((err) => console.log(err));
                     break;
                 default:
-                    console.log("an error was produced in userReactionHandler function on post component");
+                    console.log("an error was produced in userlikeHandler function on post component");
                     break;
             }
         }
@@ -120,7 +127,7 @@ const Post = (props) => {
                     .catch((err) => console.log(err));
                     break;
                 default:
-                    console.log("an error was produced in userReactionHandler function on post component");
+                    console.log("an error was produced in userDislikeHandler function on post component");
                     break;
             }
         }
@@ -129,12 +136,7 @@ const Post = (props) => {
     //Delete post
     const DeletePostHandler = async () => {
         try {
-            await sendRequest(`http://localhost:5000/post/${props.id}`, "DELETE",
-                {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + auth.token
-                }
-            );
+            await sendRequest(`http://localhost:5000/post/${props.id}`, "DELETE", null, {Authorization: "Bearer " + auth.token});
             if (path === `/post/${postId}`) {
                 history("/post");
             } else {
@@ -164,9 +166,9 @@ const Post = (props) => {
                     <Spinner asOverlay />
                 </div>
             )}
-            <UserHeader user_id={props.user} photo_url={props.photo_url} username={props.username} date={datePost} onDelete={DeletePostHandler} />
+            <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={datePost} modifyDate={modifyDatePost} onDelete={DeletePostHandler} />
             <section className={styles.block}>
-                <h3 className={styles.title}>{props.content}</h3>
+                <p className={styles.title}>{props.content}</p>
                 {props.image_url === !null ? (<img className={styles.photo} src={props.image_url} alt="post" />) : null}
                 <footer className={styles.reactions}>
                     <ReactionBtn btnType="functional" name="like" onReaction={userLikeHandler} reaction={liked === true ? 1 : null} icon="like" text={likesCounter} styling="" />

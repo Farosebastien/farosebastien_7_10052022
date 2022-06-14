@@ -11,10 +11,22 @@ const Comment = (props) => {
 
     const { sendRequest } = useHttpRequest();
 
+    const date = new Date(props.date);
+    const datePost = date.getDate()+'/' + (date.getMonth()+1) + '/'+date.getFullYear() + '  ' + date.getHours() + 'h'+date.getMinutes();
+
+    let modifyDatePost;
+
+    if (props.modifyDate != null) {
+        const modifyDate = new Date(props.modifyDate);
+        modifyDatePost = modifyDate.getDate()+'/' + (modifyDate.getMonth()+1) + '/'+modifyDate.getFullYear() + '  ' + modifyDate.getHours() + 'h'+modifyDate.getMinutes();
+    } else {
+        modifyDatePost = null;
+    }
+
     //Request Hook
     const DeleteCommentHandler = async () => {
         try {
-            await sendRequest(`http://localhost:5000/post/comments/${props.id}`, "DELETE", null, {
+            await sendRequest(`http://localhost:5000/comments/${props.id}`, "DELETE", null, {
                 Authorization: "Bearer " + auth.token,
             });
             props.onDeleteComment(props.id);
@@ -22,7 +34,7 @@ const Comment = (props) => {
     };
     return (
         <div>
-            <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={props.date} onDelete={DeleteCommentHandler} />
+            <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={datePost} modifyDate={modifyDatePost} onDelete={DeleteCommentHandler} />
             <div className={styles.block}>
                 <p className={styles.text}>{props.content}</p>
             </div>

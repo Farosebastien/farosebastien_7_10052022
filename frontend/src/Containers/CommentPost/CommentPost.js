@@ -40,15 +40,16 @@ const CommentPost = () => {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const post = await sendRequest(`http://localhost:5000/post/${postId}`, "GET", null, {
+                const postData = await sendRequest(`http://localhost:5000/post/${postId}`, "GET", null, {
                     Authorization: "Bearer " + auth.token,
                 });
-                setPost(post[0]);
-                setComments(post[1].comments);
+                setPost(postData.post[0]);
+                setComments(postData.post[1].comments);
             } catch (err) {}
         };
         fetchPost();
     }, [sendRequest, setPost, auth.token, postId, setComments]);
+
 
     //Post handler
     const postCommentHandler = async(event) => {
@@ -64,7 +65,6 @@ const CommentPost = () => {
                     content: formState.inputs.comment.value
                 }),
                 {
-                    "Content-Type": "application/json",
                     Authorization: "Bearer " + auth.token
                 }
             );
@@ -97,7 +97,7 @@ const CommentPost = () => {
         return (
             <>
                 <div className={styles.container}>
-                    <h2>No User Data!</h2>
+                    <h2>No Post Data!</h2>
                 </div>
             </>
         );
@@ -108,11 +108,11 @@ const CommentPost = () => {
             <div className="container">
                 {!isLoading && post && comments && (
                     <div className={styles.wrapper}>
-                        <Post key={post.post_id} id={post.post_id} user_id={post.user_id} photo_url={post.photo_url} username={post.username} date={post.date} title={post.content} image_url={post.image_url} likes={post.likes} dislikes={post.dislikes} comments={post.commentsCounter} userReaction={post.userReaction} post_link={`/post/${post.post_id}`} onDelete={deletePostHandler} />
+                        <Post key={post.post_id} id={post.post_id} user_id={post.users_id} photo_url={post.photo_url} username={post.username} date={post.post_date} modifyDate={post.modification_date} content={post.content} image_url={post.image_url} likes={post.likes} dislikes={post.dislikes} comments={post.commentsCounter} liked={post.liked} disliked={post.disliked} post_link={`/post/${post.post_id}`} onDelete={deletePostHandler} />
                         <section>
                             {comments.map((comment, index) => {
                                 return (
-                                    <Comment key={index} id={comment.id} user_id={comment.user_id} photo_url={comment.photo_url} username={comment.username} date={comment.comment_date} content={comment.content} onDeleteComment={deleteCommentHandler} />
+                                    <Comment key={index} id={comment.comments_id} user_id={comment.users_id} photo_url={comment.photo_url} username={comment.username} date={comment.comment_date} modifyDate={comment.modification_date} content={comment.content} onDeleteComment={deleteCommentHandler} />
                                 );
                             })}
                         </section>

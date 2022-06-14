@@ -40,10 +40,10 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/post" element={<Posts />} />
-        <Route path="/post/new" component={<NewPost />} />
-        <Route path="/menu" component={<Menu />} />
+        <Route path="/post/new" element={<NewPost />} />
+        <Route path="/menu" element={<Menu />} />
         <Route path="/user/:id" element={<UserProfile />} />
-        <Route path="/user/:id/update" component={<UpdateProfile />} />
+        <Route path="/user/:id/update" element={<UpdateProfile />} />
         <Route path="/post/:id" element={<CommentPost />} />
       </Routes>
     );

@@ -153,6 +153,11 @@ const UpdateProfile = () => {
         }
     };
 
+    const abortdeleteUser = (event) => {
+        event.preventDefault();
+        history("/user/:id/update");
+    }
+
     //  Supprimer utilisateur
     const deleteUserHandler = async (event) => {
         event.preventDefault();
@@ -229,7 +234,7 @@ const UpdateProfile = () => {
                             <h5 className={styles.title}>Êtes-vous sûr de vouloir supprimer votre compte ?</h5>
                             <div className={styles.btn_block}>
                                 <UIBtn id="accept-btn" name="Oui" type="submit" onClick={deleteUserHandler} btnType="warning" />
-                                <UIBtn id="cancel-btn" name="Annuler" onClick={showDeleteMessage} btnType="cancel" />
+                                <UIBtn id="cancel-btn" name="Annuler" onClick={abortdeleteUser} btnType="cancel" />
                             </div>
                         </div>
                     </div>

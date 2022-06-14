@@ -71,7 +71,7 @@ const Posts = () => {
     let newPost;
     if (width >= 1024) {
         newPost = (
-            <Link to={"post/new"} className={styles.btn}>
+            <Link to={"/post/new"} className={styles.btn}>
                 <span className={styles.text}>Nouveau post</span>
                 <img className={styles.icon} src={postIcon} alt="" />
             </Link>
