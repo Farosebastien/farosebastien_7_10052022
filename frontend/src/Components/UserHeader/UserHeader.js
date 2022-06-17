@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../../Context/authContext";
 
 import GenProfile from "../../images/generic_profile_picture.jpg";
@@ -11,9 +11,10 @@ import styles from "./UserHeader.module.css";
 const UserHeader = (props) => {
     //Authentification
     const auth = useContext(AuthContext);
+    const path = useLocation().pathname;
     let deleteBtn;
     //vérification si admin ou publicateur pour le bouton supprimer
-    if (auth.userId === props.user_id || auth.account === "admin") {
+    if ((auth.userId === props.user_id || auth.account === "admin") && (path !== "/post")) {
         deleteBtn = (
             <button className={styles.delete_btn} onClick={props.onDelete}>
                 <img className={styles.delete_icon} src={DeleteX} alt="delete_icon" />
@@ -22,10 +23,6 @@ const UserHeader = (props) => {
     } else {
         deleteBtn = "";
     }
-    console.log(auth.userId)
-    console.log(props.user_id)
-    console.log(auth.account)
-
     return (
         <header className={styles.block}>
             <Link to={`/user/${props.user_id}`}>

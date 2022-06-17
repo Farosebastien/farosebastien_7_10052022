@@ -112,14 +112,14 @@ exports.postComment = (req, res, next) => {
     db.query(sql, (error, commentId) => {
         if (!error) {
             //Création de la requête pour récupérer le commentaire et lier à son post ainsi les likes et dislikes
-            const string = "SELECT users.username, users.photo_url, comments.posts_id AS id, comments.users_id AS users_id, comments.content, comments.comment_date FROM comments INNER JOIN posts ON comments.posts_id = posts.id INNER JOIN users ON comments.users_id = users.id WHERE comments.comments_id = ?;";
+            const string = "SELECT users.username, users.photo_url, comments.posts_id AS id, comments.users_id AS users_id, comments.comments_id, comments.content, comments.comment_date FROM comments INNER JOIN posts ON comments.posts_id = posts.id INNER JOIN users ON comments.users_id = users.id WHERE comments.comments_id = ?;";
             const inserts = [commentId.insertId];
             const sql = mysql.format(string, inserts);
             //Requête sql
             db.query(sql, (error, response) => {
                 if (!error) {
                     res.status(201).json({ 
-                        comment: response
+                        comment: response[0]
                     });
                 } else {
                     return next (new HttpError("erreur lors de la récupération du commentaire", 500));
@@ -568,28 +568,35 @@ exports.getOnePost = (req, res, next) => {
     //Récupération de l'id du post à récupérer
     const postId = req.params.id;
     //Création des requêtes de récupération du post correspondant, de ses commentaires et des utilisateurs qui ont réagi
-    const stringForPost = "SELECT u.id AS users_id, u.username, u.photo_url, p.content, p.image_url, p.post_date, p.modification_date, p.id AS post_id, (SELECT COUNT(likes) FROM reactions WHERE posts_id = r.posts_id) AS likes, (SELECT COUNT(dislikes) FROM reactions WHERE posts_id = r.posts_id) AS dislikes FROM posts AS p INNER JOIN reactions AS r ON p.id = r.posts_id INNER JOIN users AS u ON p.users_id = u.id WHERE p.id = ? GROUP BY p.id;";
+    const stringForPost = "select p.id as post_id, content, users_id, username, photo_url, modification_date, post_date, image_url from posts as p inner join users on p.users_id = users.id where p.id = ?;";
+    const stringForReactions = "SELECT (SELECT COUNT(likes) FROM reactions WHERE posts_id = r.posts_id) AS likes, (SELECT COUNT(dislikes) FROM reactions WHERE posts_id = r.posts_id) AS dislikes FROM posts AS p INNER JOIN reactions AS r ON p.id = r.posts_id INNER JOIN users AS u ON p.users_id = u.id WHERE p.id = ? GROUP BY p.id;";
     const stringForComment = "SELECT users.id AS users_id, users.username, users.photo_url, comments.comments_id, comments.comment_date, comments.modification_date, comments.content FROM comments INNER JOIN users ON comments.users_id = users.id WHERE posts_id = ?;";
     const stringForLikers = "SELECT users.id, users.username FROM reactions INNER JOIN users ON reactions.users_id = users.id WHERE posts_id = ? AND likes = 1;";
     const stringForDislikers = "SELECT users.id, users.username FROM reactions INNER JOIN users on reactions.users_id = users.id WHERE posts_id = ? AND dislikes = 1;";
     //Requête sql
-    db.query(`${stringForPost} ${stringForComment} ${stringForLikers} ${stringForDislikers}`, [postId, postId, postId, postId], (error, result, fields) => {
+    db.query(`${stringForPost} ${stringForReactions} ${stringForComment} ${stringForLikers} ${stringForDislikers}`, [postId, postId, postId, postId, postId], (error, result, fields) => {
         if(!error) {
             //Test si l'utilisateur à liké ou disliké le post
             let liked = false;
             let disliked = false;
+            let likes = 0;
+            let dislikes = 0;
+            if(result[1].length > 0) {
+                likes = result[1][0].likes;
+                dislikes = result[1][0].dislikes;
+            }
             //Liked
-            for( let i = 0; i < result[2].length; i++) {
-                if(user.id == result[2][i].id)
+            for( let i = 0; i < result[3].length; i++) {
+                if(user.id == result[3][i].id)
                 liked = true;
             }
             //Disliked
-            for( let i = 0; i < result[3].length; i++) {
-                if(user.id == result[3][i].id)
+            for( let i = 0; i < result[4].length; i++) {
+                if(user.id == result[4][i].id)
                 disliked = true;
             }
             //Récupération et envoi des résultat de la requête
-            const results = [{...result[0][0], commentsCounter: result[1].length, liked: liked, disliked: disliked, usersLikedId: result[2], usersDislikesId: result[3]},{comments: result[1]}];
+            const results = [{...result[0][0], likes: likes, dislikes: dislikes, commentsCounter: result[2].length, liked: liked, disliked: disliked, usersLikedId: result[3], usersDislikesId: result[4]},{comments: result[2]}];
             res.status(200).json({
                 post: results
             });

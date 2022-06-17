@@ -70,33 +70,37 @@ const UpdateProfile = () => {
         const fetchUser = async () => {
             try {
                 const userData = await sendRequest(
-                    `http://localhost:5000/user/${auth.userId}`, "GET", null, {Authorization: "Bearer " + auth.token}
+                    `${process.env.REACT_APP_API_URL}/user/${auth.userId}`, "GET", null, {Authorization: "Bearer " + auth.token}
                 );
-                setUserDataState(userData);
+                setUserDataState(userData.profile);
                 setFormState(
                     {
                         image: {
-                            value: userData.photo_url,
+                            value: userData.profile.photo_url,
                             isValid: false,
                         },
                         firstName: {
-                            value: userData.firstname,
+                            value: userData.profile.firstame,
                             isValid: true,
                         },
                         lastName: {
-                            value: userData.lastname,
+                            value: userData.profile.lastname,
                             isValid: true,
                         },
                         username: {
-                            value: userData.username,
+                            value: userData.profile.username,
                             isValid: true,
                         },
                         role: {
-                            value: userData.role,
+                            value: userData.profile.role,
                             isValid: true,
                         },
                         email: {
-                            value: userData.email,
+                            value: userData.profile.email,
+                            isValid: true,
+                        },
+                        password: {
+                            value: "",
                             isValid: true,
                         }
                     },
@@ -110,17 +114,18 @@ const UpdateProfile = () => {
     //Mise à jour des données utilisateur
     const updateProfileHandler = async (event) => {
         event.preventDefault();
-
         const formData = new FormData();
         formData.append("image", formState.inputs.image.value);
-        formData.append("firstName", formState.inputs.firstName.value);
-        formData.append("lastName", formState.inputs.lastName.value);
+        formData.append("firstname", formState.inputs.firstName.value);
+        formData.append("lastname", formState.inputs.lastName.value);
         formData.append("username", formState.inputs.username.value);
         formData.append("email", formState.inputs.email.value);
         try {
-            await sendRequest("http://localhost:5000/user/update", "PATCH", formData, {
+            await sendRequest(`${process.env.REACT_APP_API_URL}/user/update`, "PATCH", formData,
+            {
                 Authorization: "Bearer " + auth.token,
             });
+            window.location.reload();
         } catch (err) {}
     };
 
@@ -130,7 +135,7 @@ const UpdateProfile = () => {
 
         try {
             await sendRequest(
-                "http://localhost:5000/user/update",
+                `${process.env.REACT_APP_API_URL}/user/update`,
                 "PUT",
                 JSON.stringify({
                     password: formState.inputs.password.value,
@@ -155,6 +160,7 @@ const UpdateProfile = () => {
 
     const abortdeleteUser = (event) => {
         event.preventDefault();
+        setShowInfo(false);
         history("/user/:id/update");
     }
 
@@ -163,7 +169,7 @@ const UpdateProfile = () => {
         event.preventDefault();
 
         try {
-            await sendRequest(`http://localhost:5000/user/${auth.userId}`, "DELETE", null, {
+            await sendRequest(`${process.env.REACT_APP_API_URL}/user/${auth.userId}`, "DELETE", null, {
                 "Content-Type": "application/json",
                 Authorization: "Bearer " + auth.token,
             });
@@ -214,22 +220,22 @@ const UpdateProfile = () => {
                         <h4 className={styles.title}>Vos infos personnelles</h4>
                         {desktopNav}
                         <form id="update-form" className={styles.update_list} onSubmit={updateProfileHandler}>
-                            <InputField id="firstName" label="Prénom :" name="firstName" type="text" placeholder="Votre prénom" autocomplete="given-name" maxLength="45" element="input" hasLabel="yes" textIsWhite="no" validators={[MinLength(2), MaxLength(45), isText()]} errorText="Veuillez entrer un prénom" onInput={inputHandler} initialValue={userDataState.firstName} initialValid={true} />
-                            <InputField id="lastName" label="Nom :" name="lastName" type="text" placeholder="Votre nom" autocomplete="family-name" maxLength="45" element="input" hasLabel="yes" textIsWhite="no" validators={[MinLength(2), MaxLength(45), isText()]} errorText="Veuillez entrer un nom" onInput={inputHandler} initialValue={userDataState.lastName} initialValid={true} />
+                            <InputField id="firstName" label="Prénom :" name="firstName" type="text" placeholder="Votre prénom" autocomplete="given-name" maxLength="45" element="input" hasLabel="yes" textIsWhite="no" validators={[MinLength(2), MaxLength(45), isText()]} errorText="Veuillez entrer un prénom" onInput={inputHandler} initialValue={userDataState.firstname} initialValid={true} />
+                            <InputField id="lastName" label="Nom :" name="lastName" type="text" placeholder="Votre nom" autocomplete="family-name" maxLength="45" element="input" hasLabel="yes" textIsWhite="no" validators={[MinLength(2), MaxLength(45), isText()]} errorText="Veuillez entrer un nom" onInput={inputHandler} initialValue={userDataState.lastname} initialValid={true} />
                             <InputField id="username" label="Nom d'utilisateur :" name="username" type="text" placeholder="Votre nom d'utilisateur" autocomplete="nickname" maxLength="45" element="input" hasLabel="yes" textIsWhite="no" validators={[MinLength(2), MaxLength(45), isText()]} errorText="Veuillez entrer un nom d'utilisateur" onInput={inputHandler} initialValue={userDataState.username} initialValid={true} />
                             <InputField id="email" label="Email :" name="email" type="text" placeholder="Votre email" autocomplete="email" maxLength="100" element="input" hasLabel="yes" textIsWhite="no" validators={[MinLength(6), MaxLength(100), isEmail()]} errorText="email incorrect" onInput={inputHandler} initialValue={userDataState.email} initialValid={true} />
                         </form>
                         <UIBtn id="update-profile-btn" form="update-form" name="Mettre à jour mon profil" type="submit" btnType="valid" />
                         <h4 className={styles.title}>Changer mon mot de passe</h4>
                         <form id="update-password-form" className={styles.update_list} onSubmit={updatePasswordHandler}>
-                        <InputField id="password" label="Mot de passe :" name="password" type="password" placeholder="Votre nouveau pot de passe" icon={password} alt="password icon" maxLength="50" element="input" hasLabel="yes" textIsWhite="no" validators={[MinLength(8), MaxLength(50)]} errorText="Minimum une majuscule, un chiffre et 8 lettres" onInput={inputHandler} initialValue={formState.inputs.password.value} initialValid={formState.inputs.password.isValid} />
+                        <InputField id="password" label="Mot de passe :" name="password" type="password" placeholder="Votre nouveau mot de passe" icon={password} alt="password icon" maxLength="50" element="input" hasLabel="yes" textIsWhite="no" validators={[MinLength(8), MaxLength(50)]} errorText="Minimum une majuscule, un chiffre et 8 lettres" onInput={inputHandler} initialValue={formState.inputs.password.value} initialValid={formState.inputs.password.isValid} />
                         </form>
                         <UIBtn id="update-password-btn" form="update-password-form" name="changer mon mot de passe" type="submit" btnType="valid" />
                         <h4 className={styles.title}>Supprimer mon compte</h4>
                         <UIBtn id="delete-profile-btn" icon={deleteicon} name="Supprimer" onClick={showDeleteMessage} btnType="warning" iconColor="icon_white" />
                         <div style={{ display: showInfo === true ? "block" : "none" }}>
                             <p className={styles.role}>
-                                Vous êtes sur le point de supprimer votre compte. Toutes les informatios liées à ce comptes seront définitivement supprimées.
+                                Vous êtes sur le point de supprimer votre compte. Toutes les informations liées à ce compte seront définitivement supprimées.
                             </p>
                             <h5 className={styles.title}>Êtes-vous sûr de vouloir supprimer votre compte ?</h5>
                             <div className={styles.btn_block}>

@@ -28,7 +28,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const userData = await sendRequest(`http://localhost:5000/user/${userId}`, "GET", null, {
+                const userData = await sendRequest(`${process.env.REACT_APP_API_URL}/user/${userId}`, "GET", null, {
                     Authorization: "Bearer " + auth.token
                 });
                 setProfileData(userData);

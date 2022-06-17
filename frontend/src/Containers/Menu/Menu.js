@@ -32,7 +32,7 @@ const Menu = () => {
         if (auth.token && auth.userId) {
             const fetchPosts = async () => {
                 try {
-                    const userData = await sendRequest(`http://localhost:5000/user/${auth.userId}`, "GET", null, {Authorization: "Bearer " + auth.token});
+                    const userData = await sendRequest(`${process.env.REACT_APP_API_URL}/user/${auth.userId}`, "GET", null, {Authorization: "Bearer " + auth.token});
                     if (mounted) {
                         setProfileData(userData);
                     }

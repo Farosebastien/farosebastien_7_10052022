@@ -69,7 +69,7 @@ exports.updateUser = (req, res, next) => {
     //Si l'image ne change pas
     } else {
         //Validation de image_url contre les injections sql
-        validPhoto_url = req.body.photo_url;
+        validPhoto_url = req.body.image;
         if (String(validPhoto_url).match(regExInjection) == null) {
             photo_url = validPhoto_url;
         } else {

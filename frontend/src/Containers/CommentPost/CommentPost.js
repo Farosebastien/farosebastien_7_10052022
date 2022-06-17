@@ -40,7 +40,7 @@ const CommentPost = () => {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const postData = await sendRequest(`http://localhost:5000/post/${postId}`, "GET", null, {
+                const postData = await sendRequest(`${process.env.REACT_APP_API_URL}/post/${postId}`, "GET", null, {
                     Authorization: "Bearer " + auth.token,
                 });
                 setPost(postData.post[0]);
@@ -54,33 +54,34 @@ const CommentPost = () => {
     //Post handler
     const postCommentHandler = async(event) => {
         event.preventDefault();
+        let newCommentData;
 
         if(!formState.isValid) {
             return;
         }
 
         try {
-            const newCommentData = await sendRequest(`http://localhost:5000/post/comment`, "POST", JSON.stringify({
-                    postId: postId,
+            newCommentData = await sendRequest(`${process.env.REACT_APP_API_URL}/post/comment`, "POST", JSON.stringify({
+                    post_id: Number(postId),
                     content: formState.inputs.comment.value
                 }),
                 {
+                    "Content-type" : "application/json",
                     Authorization: "Bearer " + auth.token
                 }
+                
             );
-            setComments((prevComments) => [...prevComments, newCommentData[0]]);
-            inputHandler("comment", "", false);
+            
+            
         } catch (err) {}
-    };
-
-    //Delete post handler
-    const deletePostHandler = (deletedPostId) => {
-        setPost((prevPosts) => prevPosts.filter((post) => post.post_id !== deletedPostId));
+        setComments([...comments, newCommentData.comment]);
+        inputHandler("comment", "", false);
     };
 
     //Delete comment handler
     const deleteCommentHandler = (deletedCommentId) => {
-        setComments((prevComments) => prevComments.filter((comment) => comment.id !== deletedCommentId));
+        const prevComments = [...comments];
+        setComments(prevComments.filter((comment) => comment.comments_id !== deletedCommentId));
     };
 
     if (isLoading) {
@@ -108,7 +109,7 @@ const CommentPost = () => {
             <div className="container">
                 {!isLoading && post && comments && (
                     <div className={styles.wrapper}>
-                        <Post key={post.post_id} id={post.post_id} user_id={post.users_id} photo_url={post.photo_url} username={post.username} date={post.post_date} modifyDate={post.modification_date} content={post.content} image_url={post.image_url} likes={post.likes} dislikes={post.dislikes} comments={post.commentsCounter} liked={post.liked} disliked={post.disliked} post_link={`/post/${post.post_id}`} onDelete={deletePostHandler} />
+                        <Post key={post.post_id} id={post.post_id} user_id={post.users_id} photo_url={post.photo_url} username={post.username} date={post.post_date} modifyDate={post.modification_date} content={post.content} image_url={post.image_url} likes={post.likes} dislikes={post.dislikes} comments={post.commentsCounter} liked={post.liked} disliked={post.disliked} post_link={`/post/${post.post_id}`} />
                         <section>
                             {comments.map((comment, index) => {
                                 return (

@@ -14,7 +14,7 @@ router.get("/mostLiked", auth, postsCtrl.getMostLikedPosts);
 router.get("/:id", auth, postsCtrl.getOnePost);
 //Routes put
 router.put("/:id", auth, multer, postsCtrl.updatePost);
-router.put("/comments/:comments_id", auth, postsCtrl.updateComment);
+router.put("/comments/:id", auth, postsCtrl.updateComment);
 //Routes delete
 router.delete("/reaction", auth, postsCtrl.deleteReaction);
 router.delete("/comments/:comments_id", auth, postsCtrl.deleteComment);

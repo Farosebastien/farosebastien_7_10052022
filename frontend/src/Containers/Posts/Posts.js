@@ -29,7 +29,7 @@ const Posts = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const postsData = await sendRequest("http://localhost:5000/post", "GET", null, {
+                const postsData = await sendRequest(`${process.env.REACT_APP_API_URL}/post`, "GET", null, {
                     Authorization: "Bearer " + auth.token
                 });
                 setPosts(postsData);
@@ -44,7 +44,7 @@ const Posts = () => {
             mostLiked: "",
         });
         try {
-            const postsData = await sendRequest("http://localhost:5000/post", "GET", null, {
+            const postsData = await sendRequest(`${process.env.REACT_APP_API_URL}/post`, "GET", null, {
                 Authorization: "Bearer " + auth.token
             });
             setPosts(postsData);
@@ -57,15 +57,11 @@ const Posts = () => {
             mostLiked: "active",
         });
         try {
-            const postsData = await sendRequest("http://localhost:5000/post/mostLiked", "GET", null, {
+            const postsData = await sendRequest(`${process.env.REACT_APP_API_URL}/post/mostLiked`, "GET", null, {
                 Authorization: "Bearer " + auth.token
             });
             setPosts(postsData);
         } catch (err) {}
-    };
-
-    const deletePostHandler = (deletedPostId) => {
-        setPosts((prevPosts) => prevPosts.filter((post) => post.post_id !== deletedPostId));
     };
 
     let newPost;
@@ -91,7 +87,7 @@ const Posts = () => {
                         <Spinner />
                     </div>
                 )}
-                {!isLoading && activeBtn && posts && <PostList items={posts} onDeletePost={deletePostHandler} />}
+                {!isLoading && activeBtn && posts && <PostList items={posts} />}
             </div>
         </>
     );

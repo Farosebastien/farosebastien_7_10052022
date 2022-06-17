@@ -4,7 +4,6 @@ import Post from "../Post/Post";
 import styles from "./PostList.module.css";
 
 const PostList = (props) => {
-    
     if (props.items.posts.length === 0) {
         return (
             <div className={styles.container}>

@@ -34,6 +34,10 @@ const Login = () => {
         },
         false
     );
+    const forgottenPassword = (event) => {
+        event.preventDefault();
+        window.location.href = "mailto:clemence@groupmania.fr"
+    }
 
     const loginHandler = async (event) => {
         event.preventDefault();
@@ -48,7 +52,7 @@ const Login = () => {
                 password: formState.inputs.password.value
             };
 
-            const responseData = await sendRequest("http://localhost:5000/login", "POST", JSON.stringify(data), { "Content-Type": "application/json"});
+            const responseData = await sendRequest(`${process.env.REACT_APP_API_URL}/login`, "POST", JSON.stringify(data), { "Content-Type": "application/json"});
             auth.login(responseData.userId, responseData.token, responseData.account);
             history("/post");
         } catch (err) {}
@@ -63,7 +67,7 @@ const Login = () => {
                     <InputField id="password" name="password" type="password" onInput={inputHandler} placeholder="mot de passe" autocomplete="current-password" icon={password} alt="password icon" hasLabel="no" textIsWhite="yes" validators={[MinLength(8)]} errorText="Mot de passe incorrect" initialValue={formState.inputs.password.value} initialValid={formState.inputs.password.isValid} />
                 </form>
                 <p className="error_message">{error}</p>
-                <Link className="forgot_pass_link" to={"/login"}>Mot de passe oublié ?</Link>
+                <Link className="forgot_pass_link" to={"/login"} onClick={forgottenPassword}>Mot de passe oublié ?</Link>
             </div>
             <div className="background_blur"></div>
         </>

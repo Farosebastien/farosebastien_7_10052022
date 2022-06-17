@@ -91,7 +91,7 @@ const ImageUpload = (props) => {
                     </div>
                 )}
             </label>
-            <input type="file" accept=".jpeg,.jpg" id="upload-button" style={{ display: "none" }} onChange={pickedImageHandler} />
+            <input type="file" accept=".jpeg,.jpg,.gif" id="upload-button" style={{ display: "none" }} onChange={pickedImageHandler} />
         </>
     );
 };

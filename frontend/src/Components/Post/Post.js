@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import { AuthContext } from "../../Context/authContext";
 
@@ -18,7 +18,7 @@ const Post = (props) => {
     const history = useNavigate();
     //Location
     const path = useLocation().pathname;
-    const postId = Number(useParams().id);
+    //const postId = Number(useParams().id);
     //User Likes
     const [likesCounter, setLikesCounter] = useState(props.likes);
     //User Dislikes
@@ -47,7 +47,7 @@ const Post = (props) => {
                 case true:
                     setLikesCounter(likesCounter - 1);
                     setLiked(liked = false);
-                    fetch (`http://localhost:5000/post/reaction`, {
+                    fetch (`${process.env.REACT_APP_API_URL}/post/reaction`, {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json", Authorization: "Bearer " + auth.token },
                         body: JSON.stringify({
@@ -64,7 +64,7 @@ const Post = (props) => {
                 case false:
                     setLikesCounter(likesCounter + 1);
                     setLiked(liked = true);
-                    fetch (`http://localhost:5000/post/reaction`, {
+                    fetch (`${process.env.REACT_APP_API_URL}/post/reaction`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json", Authorization: "Bearer " + auth.token },
                         body: JSON.stringify({
@@ -94,7 +94,7 @@ const Post = (props) => {
                 case true:
                     setDislikesCounter(dislikesCounter - 1);
                     setDisliked(disliked = false);
-                    fetch (`http://localhost:5000/post/reaction`, {
+                    fetch (`${process.env.REACT_APP_API_URL}/post/reaction`, {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json", Authorization: "Bearer " + auth.token },
                         body: JSON.stringify({
@@ -111,7 +111,7 @@ const Post = (props) => {
                 case false:
                     setDislikesCounter(dislikesCounter + 1);
                     setDisliked(disliked = true);
-                    fetch (`http://localhost:5000/post/reaction`, {
+                    fetch (`${process.env.REACT_APP_API_URL}/post/reaction`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json", Authorization: "Bearer " + auth.token },
                         body: JSON.stringify({
@@ -136,12 +136,8 @@ const Post = (props) => {
     //Delete post
     const DeletePostHandler = async () => {
         try {
-            await sendRequest(`http://localhost:5000/post/${props.id}`, "DELETE", null, {Authorization: "Bearer " + auth.token});
-            if (path === `/post/${postId}`) {
-                history("/post");
-            } else {
-                props.onDelete(props.id);
-            }
+            await sendRequest(`${process.env.REACT_APP_API_URL}/post/${props.id}`, "DELETE", null, {Authorization: "Bearer " + auth.token});
+            history("/post");
         } catch (err) {}
     };
     //Type de visualisation sur Post et CommentPost
@@ -169,7 +165,7 @@ const Post = (props) => {
             <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={datePost} modifyDate={modifyDatePost} onDelete={DeletePostHandler} />
             <section className={styles.block}>
                 <p className={styles.title}>{props.content}</p>
-                {props.image_url === !null ? (<img className={styles.photo} src={props.image_url} alt="post" />) : null}
+                {props.image_url === null ? null : (<img className={styles.photo} src={props.image_url} alt="post" />)}
                 <footer className={styles.reactions}>
                     <ReactionBtn btnType="functional" name="like" onReaction={userLikeHandler} reaction={liked === true ? 1 : null} icon="like" text={likesCounter} styling="" />
                     <ReactionBtn btnType="functional" name="dislike" onReaction={userDislikeHandler} reaction={disliked === true ? -1 : null} icon="dislike" text={dislikesCounter} styling="" />

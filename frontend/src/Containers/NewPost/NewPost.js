@@ -26,7 +26,7 @@ const NewPost = (props) => {
     //FormState
     const [formState, inputHandler] = useForm(
         {
-            title: {
+            content: {
                 value: "",
                 isValid: false
             },
@@ -41,27 +41,28 @@ const NewPost = (props) => {
     //Envoi du post au backend
     const sendPostHandler = async (event) => {
         event.preventDefault();
+        console.log(formState.isValid)
 
         if(!formState.isValid) {
             return;
         }
 
         const formData = new FormData();
-        formData.append("content", formState.inputs.content.value);
+        formData.append("content", formState.inputs.title.value);
         formData.append("image", formState.inputs.image.value);
 
         try {
-            await sendRequest("http://localhost:5000/post", "POST", formData, {
+            await sendRequest(`${process.env.REACT_APP_API_URL}/post`, "POST", formData, {
                 Authorization: "Bearer " + auth.token
             });
-            history.pushState("/post");
+            history("/post");
         } catch (err) {}
     };
 
     //Bouton retour
     const backHandle = (e) => {
         e.preventDefault();
-        props.history.goBack();
+        history("/post");
     };
 
     //Boutons
@@ -95,7 +96,7 @@ const NewPost = (props) => {
         <>
             {!isLoading && (
                 <>
-                    <header classNmae={styles.head}>
+                    <header className={styles.head}>
                         <div className={styles.tab}>
                             {backBtn}
                             <div className={styles.tab_border}>
@@ -105,7 +106,7 @@ const NewPost = (props) => {
                     </header>
                     <div className="container">
                         <form className={styles.form} id="send-post-form" onSubmit={sendPostHandler}>
-                            <InputField id="title" name="title" type="text" placeholder="Contenu de la publication" maxLength="100" element="textarea" hasLabel="no" textIsWhite="no" validators={[MinLength(2), MaxLength(100)]} errorText="Veuillez écrire un commentaire pour votre publication" onInput={inputHandler} initialValue={formState.inputs.content.value} initialValid={formState.inputs.title.isValid} />
+                            <InputField id="title" name="title" type="text" placeholder="Contenu de la publication" maxLength="100" element="textarea" hasLabel="no" textIsWhite="no" validators={[MinLength(2), MaxLength(100)]} errorText="Veuillez écrire un commentaire pour votre publication" onInput={inputHandler} initialValue={formState.inputs.content.value} initialValid={formState.inputs.content.isValid} />
                             <ImageUpload center id="image" onInput={inputHandler} errorText="Choississez une image" />
                             {sendBtn}
                         </form>

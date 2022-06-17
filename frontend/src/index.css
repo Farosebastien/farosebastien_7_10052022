@@ -12,7 +12,7 @@ body {
     flex-direction: column;
     min-height: 100%;
     font-size: 1.6em;
-    font-family: "Montserrat", "Roboto", sans-serif;
+    font-family: "Lato", "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin: 0;
@@ -20,11 +20,11 @@ body {
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "lato", monospace;
 }
 
 button {
-    font-family: "Montserrat", "Roboto", sans-serif;
+    font-family: "lato", "Roboto", sans-serif;
     font-size: 9px;
 }
 

@@ -66,7 +66,7 @@ const SignUp = () => {
                 password: formState.inputs.password.value
             };
             console.log(JSON.stringify(data))
-            const responseData = await sendRequest("http://localhost:5000/signup", "POST", JSON.stringify(data), {
+            const responseData = await sendRequest(`${process.env.REACT_APP_API_URL}/signup`, "POST", JSON.stringify(data), {
                 "Content-Type": " application/json"
             });
             auth.login(responseData.userId, responseData.token, responseData.account);
