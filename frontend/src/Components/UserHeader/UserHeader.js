@@ -5,6 +5,7 @@ import { AuthContext } from "../../Context/authContext";
 import GenProfile from "../../images/generic_profile_picture.jpg";
 
 import DeleteX from "../../images/x-icon.svg";
+import modify from "../../images/modify-icon.svg";
 
 import styles from "./UserHeader.module.css";
 
@@ -13,6 +14,7 @@ const UserHeader = (props) => {
     const auth = useContext(AuthContext);
     const path = useLocation().pathname;
     let deleteBtn;
+    let modifyBtn;
     //vérification si admin ou publicateur pour le bouton supprimer
     if ((auth.userId === props.user_id || auth.account === "admin") && (path !== "/post")) {
         deleteBtn = (
@@ -22,6 +24,16 @@ const UserHeader = (props) => {
         );
     } else {
         deleteBtn = "";
+    }
+
+    if ((auth.userId === props.user_id || auth.account === "admin") && (path !== "/post")) {
+        modifyBtn = (
+            <button className={styles.modify_btn} onClick={props.onModify}>
+                <img className={styles.modify_icon} src={modify} alt="modify_icon" />
+            </button>
+        );
+    } else {
+        modifyBtn = "";
     }
     return (
         <header className={styles.block}>
@@ -33,7 +45,11 @@ const UserHeader = (props) => {
                 <span className={styles.text_division}>posté le: {props.date}</span>
                 {props.modifyDate === null ? null : (<span className={styles.text_division}>modifié le: {props.modifyDate}</span>)}
             </p>
-            {deleteBtn}
+            <div className={styles.buttons}>
+                {modifyBtn}
+                {deleteBtn}
+            </div>
+            
         </header>
     );
 };

@@ -14,27 +14,30 @@ import UserProfile from "./Containers/UserProfile/UserProfile";
 import UpdateProfile from "./Containers/UpdateProfile/UpdateProfile";
 import CommentPost from "./Containers/CommentPost/CommentPost";
 import NewPost from "./Containers/NewPost/NewPost";
+//import UpdatePost from "./Containers/UpdatePost/UpdatePost";
+//import UpdateComment from "./Containers/UpdateComment/UpdateComment";
 
 import "./App.css";
 
 const App = () => {
   const { userId, token, account, login, logout } = useAuth();
 
-  let routes;
-    routes = (
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/post" element={<Posts />} />
-        <Route path="/post/new" element={<NewPost />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/user/:id" element={<UserProfile />} />
-        <Route path="/user/:id/update" element={<UpdateProfile />} />
-        <Route path="/post/:id" element={<CommentPost />} />
-      </Routes>
-    );
-  //}
+  const routes = (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/post" element={<Posts />} />
+      <Route path="/post/new" element={<NewPost />} />
+      <Route path="/menu" element={<Menu />} />
+      <Route path="/user/:id" element={<UserProfile />} />
+      <Route path="/user/:id/update" element={<UpdateProfile />} />
+      <Route path="/post/:id" element={<CommentPost />} />
+      {/*<Route path="/post/:id/update" element={<UpdatePost />} />
+      <Route path="/post/:id/updatecomment" element={<UpdateComment />} />*/}
+    </Routes>
+  );
+
   
   return (
     <AuthContext.Provider
