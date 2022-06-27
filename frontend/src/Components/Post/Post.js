@@ -140,6 +140,10 @@ const Post = (props) => {
             history("/post");
         } catch (err) {}
     };
+
+    const ModifyPostHandler = () => {
+        history(`/post/update/${props.id}`);
+    }
     //Type de visualisation sur Post et CommentPost
     let commentBlock;
     if(path === "/post") {
@@ -162,10 +166,10 @@ const Post = (props) => {
                     <Spinner asOverlay />
                 </div>
             )}
-            <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={datePost} modifyDate={modifyDatePost} onDelete={DeletePostHandler} />
+            <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={datePost} modifyDate={modifyDatePost} onDelete={DeletePostHandler} onModify={ModifyPostHandler}/>
             <section className={styles.block}>
-                <p className={styles.title}>{props.content}</p>
                 {props.image_url === null ? null : (<img className={styles.photo} src={props.image_url} alt="post" />)}
+                <p className={styles.title}>{props.content}</p>
                 <footer className={styles.reactions}>
                     <ReactionBtn btnType="functional" name="like" onReaction={userLikeHandler} reaction={liked === true ? 1 : null} icon="like" text={likesCounter} styling="" />
                     <ReactionBtn btnType="functional" name="dislike" onReaction={userDislikeHandler} reaction={disliked === true ? -1 : null} icon="dislike" text={dislikesCounter} styling="" />

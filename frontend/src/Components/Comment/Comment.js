@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/authContext";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import UserHeader from "../UserHeader/UserHeader";
@@ -8,6 +9,8 @@ import styles from "./Comment.module.css";
 const Comment = (props) => {
     //Authentification context
     const auth = useContext(AuthContext);
+
+    const history = useNavigate();
 
     const { sendRequest } = useHttpRequest();
 
@@ -30,9 +33,13 @@ const Comment = (props) => {
             props.onDeleteComment(props.id);
         } catch (err) {}
     };
+
+    const updateCommentHandler = () => {
+        history(`/comment/update/${props.id}`);
+    }
     return (
         <div>
-            <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={datePost} modifyDate={modifyDatePost} onDelete={DeleteCommentHandler} />
+            <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={datePost} modifyDate={modifyDatePost} onDelete={DeleteCommentHandler} onModify={updateCommentHandler}/>
             <div className={styles.block}>
                 <p className={styles.text}>{props.content}</p>
             </div>

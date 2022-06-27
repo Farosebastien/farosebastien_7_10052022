@@ -12,7 +12,8 @@
 }
 
 .photo {
-    width: 100%;
+    align-self: center;
+    width: 50%;
     height: auto;
 }
 
@@ -53,7 +54,8 @@
 
 @media only screen and (min-width: 1024px) {
     .photo {
-        width: 90%;
+        align-self: center;
+        width:50%;
         margin: 0 auto;
     }
 

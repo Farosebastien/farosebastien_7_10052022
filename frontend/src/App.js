@@ -14,8 +14,8 @@ import UserProfile from "./Containers/UserProfile/UserProfile";
 import UpdateProfile from "./Containers/UpdateProfile/UpdateProfile";
 import CommentPost from "./Containers/CommentPost/CommentPost";
 import NewPost from "./Containers/NewPost/NewPost";
-//import UpdatePost from "./Containers/UpdatePost/UpdatePost";
-//import UpdateComment from "./Containers/UpdateComment/UpdateComment";
+import UpdatePost from "./Containers/UpdatePost/UpdatePost";
+import UpdateComment from "./Containers/UpdateComment/UpdateComment";
 
 import "./App.css";
 
@@ -33,8 +33,8 @@ const App = () => {
       <Route path="/user/:id" element={<UserProfile />} />
       <Route path="/user/:id/update" element={<UpdateProfile />} />
       <Route path="/post/:id" element={<CommentPost />} />
-      {/*<Route path="/post/:id/update" element={<UpdatePost />} />
-      <Route path="/post/:id/updatecomment" element={<UpdateComment />} />*/}
+      <Route path="/post/update/:id" element={<UpdatePost />} />
+      <Route path="/comment/update/:id" element={<UpdateComment />} />
     </Routes>
   );
 

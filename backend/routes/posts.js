@@ -12,6 +12,7 @@ router.post("/comment", auth, postsCtrl.postComment);
 router.get("/", auth, postsCtrl.getAllPosts);
 router.get("/mostLiked", auth, postsCtrl.getMostLikedPosts);
 router.get("/:id", auth, postsCtrl.getOnePost);
+router.get("/comments/:id", auth, postsCtrl.getOneComment);
 //Routes put
 router.put("/:id", auth, multer, postsCtrl.updatePost);
 router.put("/comments/:id", auth, postsCtrl.updateComment);

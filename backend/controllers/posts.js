@@ -602,11 +602,27 @@ exports.getOnePost = (req, res, next) => {
             });
         //Si il y a une erreur, un message est affiché
         } else {
-            console.log(error);
             return next(new HttpError("erreur lors de la récupération du post", 500));
         }
     });
 };
+//Récupération d'un commentaire
+exports.getOneComment = (req, res, next) => {
+    //Récupération de l'id du commentaire
+    const commentId = req.params.id;
+    const string = "SELECT content, users_id AS userId, comment_date, modification_date, photo_url, username FROM comments AS c INNER JOIN users ON c.users_id = users.id WHERE comments_id = ?;";
+    const inserts = [commentId];
+    const sql = mysql.format(string, inserts);
+    db.query(sql, (error, result) => {
+        if(!error) {
+            res.status(201).json({ 
+                comment: result[0]
+            });
+        } else {
+            return next(new HttpError("erreur lors de la récupération du commentaire", 500));
+        }
+    })
+}
 //Mise à jour d'un post
 exports.updatePost = (req, res, next) => {
     //Récupération de l'id utilisateur
@@ -666,10 +682,8 @@ exports.updatePost = (req, res, next) => {
 };
 //Mise à jour d'un commentaire
 exports.updateComment = (req, res, next) => {
-    //Récupération de l'id utilisateur
-    const user = userId(req.headers.authorization);
     //Récupération de l'id du commentaire à mettre à jour
-    const commentId = req.params.comments_id;
+    const commentId = req.params.id;
     //Récupération du contenu de la requête venant du front
     const comment = req.body.content;
     let validComment;
@@ -680,26 +694,14 @@ exports.updateComment = (req, res, next) => {
         return next(new HttpError("requête non autorisée", 403));
     }
     //Création de la requête de mise à jour du commentaire
-    const string = "UPDATE comments SET content = ? WHERE comments_id = ? AND users_id = ?;";
-    const inserts  = [validComment, commentId, user.id];
+    const string = "UPDATE comments SET content = ? WHERE comments_id = ?;";
+    const inserts  = [validComment, commentId];
     const sql = mysql.format(string, inserts);
     //Requête sql de mise à jour
     db.query(sql, (error, result) => {
         if (!error) {
-            //Création de la requête de récupération du commentaire mis à jour
-            const string = "SELECT users.username, users.photo_url, comments.posts_id AS id, comments.users_id AS users_id, comments.content, comments.modification_date FROM comments INNER JOIN posts ON comments.posts_id = posts.id INNER JOIN users ON comments.users_id = users.id WHERE comments.comments_id = ?;";
-            const inserts = [commentId];
-            const sql = mysql.format(string, inserts);
-            //Requête sql de récupération
-            db.query(sql, (error, response) => {
-                if (!error) {
-                    res.status(201).json({
-                        comment: response
-                    });
-                //Si il y a une erreur, un message est affiché
-                } else {
-                    return next (new HttpError("erreur lors de la récupération du commentaire", 500));
-                }
+            res.status(201).json({ 
+                message: "commentaire mis à jour"
             });
         //Si il y a une erreur, un message est affiché
         } else {

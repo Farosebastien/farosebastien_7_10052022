@@ -18,11 +18,11 @@ const Nav = (props) => {
     const path = useLocation().pathname;
     const history = useNavigate();
 
-    const id = Number(useParams().id);
+    const id = useParams();
 
     const backHandle = (e) => {
         e.preventDefault();
-        history("/");
+        history(-1);
     };
 
     let nav;

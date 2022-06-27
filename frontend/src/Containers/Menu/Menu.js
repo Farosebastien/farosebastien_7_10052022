@@ -93,7 +93,7 @@ const Menu = () => {
                         </div>
                     </div>
                     <nav className={styles.list}>
-                        <Link to={`user/${auth.userId}`} className={`${styles.btn} ${styles.border}`}>
+                        <Link to={`/user/${auth.userId}`} className={`${styles.btn} ${styles.border}`}>
                             <span className={styles.text}>Mon profil</span>
                             <img className={styles.icon} src={person} alt="" />
                         </Link>

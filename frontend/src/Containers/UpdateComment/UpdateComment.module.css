@@ -1,0 +1,65 @@
+.abort_btn {
+    width: 40%;
+    cursor: pointer;
+    color: white;
+    background-color: #fd2d01;
+    border: 1px solid #fd2d01;
+    border-radius: 25px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffd7d7;
+    padding: 0 2rem;
+    margin-top: 40%;
+}
+
+.comment_form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+
+.comment_wrap {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    justify-content: space-around;
+    margin-bottom: 1.6rem;
+}
+
+.btn {
+    cursor: pointer;
+    background-color: transparent;
+    border: 0;
+    min-width: 50px;
+    height: 50px;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.icon {
+    height: 2.4rem;
+}
+
+.box {
+    font-family: "Lato", "Roboto";
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: black;
+    width: 100%;
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+}

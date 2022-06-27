@@ -71,8 +71,6 @@ const CommentPost = () => {
                 }
                 
             );
-            
-            
         } catch (err) {}
         setComments([...comments, newCommentData.comment]);
         inputHandler("comment", "", false);

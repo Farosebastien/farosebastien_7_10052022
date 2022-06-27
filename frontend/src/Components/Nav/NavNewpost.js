@@ -8,7 +8,7 @@ import ActionBtn from "./../Buttons/ActionBtn/ActionBtn";
 const NavNewPost = (props) => {
     return (
         <>
-            <ActionBtn icon={back} name="retourner" onClick={props.backKandle} iconColor="icon_white" />
+            <ActionBtn icon={back} name="retourner" onClick={props.backHandle} iconColor="icon_white" />
             <ActionBtn id="send-post-btn" form="send-post-form" name="publier" type="submit" icon={send} iconColor="icon_white" />
         </>
     );

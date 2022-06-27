@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import { AuthContext } from "../../Context/authContext";
-import { useWindowDimension } from "../../Hooks/windowHook";
 
 import GenProfile from "../../images/generic_profile_picture.jpg";
 import modify from "../../images/modify-icon.svg";
@@ -20,8 +19,6 @@ const UserProfile = () => {
     const { isLoading, sendRequest } = useHttpRequest();
     //Profile Hook
     const [profileData, setProfileData] = useState();
-    //Window size
-    const { width } = useWindowDimension();
     //Id utilisateur
     const userId = Number(useParams().id);
 
@@ -42,24 +39,20 @@ const UserProfile = () => {
     let desktopNav;
 
     // Affichage Nav Desktop
-    if (width >= 1024) {
+    desktopNav = (
+        <nav className={styles.nav}>
+            <NavBtn id="back" name="retourner" icon={back} link="/post" btnStyle={btnStyle} iconColor={iconStyle} />
+        </nav>
+    );
+
+    // Validation Affichage Nav Desktop si l'utilisateur est le même qui s'affiche
+    if (auth.userId === userId) {
         desktopNav = (
             <nav className={styles.nav}>
                 <NavBtn id="back" name="retourner" icon={back} link="/post" btnStyle={btnStyle} iconColor={iconStyle} />
+                <NavBtn id="update-profile" name="Modifier" icon={modify} link={`/user/${auth.userId}/update`} btnStyle={btnStyle} iconColor={iconStyle} />
             </nav>
         );
-    }
-
-    // Validation Affichage Nav Desktop si l'utilisateur est le même qui s'affiche
-    if (width >= 1024) {
-        if (auth.userId === userId) {
-            desktopNav = (
-                <nav className={styles.nav}>
-                    <NavBtn id="back" name="retourner" icon={back} link="/post" btnStyle={btnStyle} iconColor={iconStyle} />
-                    <NavBtn id="update-profile" name="Modifier" icon={modify} link={`/user/${auth.userId}/update`} btnStyle={btnStyle} iconColor={iconStyle} />
-                </nav>
-            );
-        }
     }
 
     if (isLoading) {
