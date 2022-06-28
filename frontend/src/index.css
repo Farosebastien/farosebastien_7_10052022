@@ -1,5 +1,4 @@
 html {
-    /* set base font-size to equiv "10px", which is adapted to rem unit */
     font-size: 62.5%;
     font-size: calc(1em * 0.625);
     height: 100%;

@@ -50,7 +50,7 @@
 }
 
 .box {
-    font-family: "lato", "Roboto";
+    font-family: "Lato", "Roboto";
     font-size: 1.5rem;
     font-weight: 500;
     color: #fd2d01;
@@ -82,7 +82,7 @@
 }
 
 .white_box {
-    font-family: "Montserrat", "Roboto";
+    font-family: "Lato", "Roboto";
     font-size: 1.5rem;
     font-weight: 500;
     color: white;
