@@ -16,20 +16,20 @@ const UserHeader = (props) => {
     let deleteBtn;
     let modifyBtn;
     //vérification si admin ou publicateur pour le bouton supprimer
-    if ((auth.userId === props.user_id || auth.account === "admin") && (path !== "/post")) {
+    if ((auth.userId === props.user_id || auth.account === "admin") && (path !== "/post" && path !== `/post/update/${props.post_id}`)) {
         deleteBtn = (
             <button className={styles.delete_btn} onClick={props.onDelete}>
-                <img className={styles.delete_icon} src={DeleteX} alt="delete_icon" />
+                <img className={styles.delete_icon} src={DeleteX} alt="delete_icon" title="supprimer"/>
             </button>
         );
     } else {
         deleteBtn = "";
     }
 
-    if ((auth.userId === props.user_id || auth.account === "admin") && (path !== "/post")) {
+    if ((auth.userId === props.user_id || auth.account === "admin") && (path !== "/post" && path !== `/post/update/${props.post_id}`)) {
         modifyBtn = (
             <button className={styles.modify_btn} onClick={props.onModify}>
-                <img className={styles.modify_icon} src={modify} alt="modify_icon" />
+                <img className={styles.modify_icon} src={modify} alt="modify_icon" title="modifier" />
             </button>
         );
     } else {
@@ -38,7 +38,7 @@ const UserHeader = (props) => {
     return (
         <header className={styles.block}>
             <Link to={`/user/${props.user_id}`}>
-                <img className={styles.photo} src={props.photo_url || GenProfile} alt={`${props.username}`} />
+                <img className={styles.photo} src={props.photo_url || GenProfile} alt={`${props.username}`} title="voir le profil" />
                 {props.username}
             </Link>
             <p className={styles.text}>

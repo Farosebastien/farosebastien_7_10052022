@@ -47,7 +47,7 @@ const ImageUpload = (props) => {
     };
 
     //Si la page est newpost
-    if (path === "/post/new") {
+    if (path === "/post/new" || path === `/post/update/${props.post_id}`) {
         return (
             <>
                 <label htmlFor="upload-button" className={styles.image_container}>

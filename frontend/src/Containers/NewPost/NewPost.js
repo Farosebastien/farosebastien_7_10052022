@@ -76,7 +76,7 @@ const NewPost = (props) => {
         );
         backBtn = (
             <button className={styles.back_btn} onClick={backHandle}>
-                <img className="icon_red" src={backIcon} alt="" />
+                <img className={styles.back_btn_icon} src={backIcon} alt="retour" title="retour" />
             </button>
         );
     }

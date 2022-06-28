@@ -625,8 +625,6 @@ exports.getOneComment = (req, res, next) => {
 }
 //Mise à jour d'un post
 exports.updatePost = (req, res, next) => {
-    //Récupération de l'id utilisateur
-    const user = userId(req.headers.authorization);
     //Récupération de l'id du post à mettre à jour
     const postId = req.params.id;
     //Récupération du contenu de la requête venant du front
@@ -659,13 +657,13 @@ exports.updatePost = (req, res, next) => {
     }
     if (validPostContent != null) {
         //Création de la requête de mise à jour du post avec content
-        const string = "UPDATE posts SET content = ?, image_url = ? WHERE id = ? AND users_id = ?;";
-        const inserts = [validPostContent, image_url, postId, user.id];
+        const string = "UPDATE posts SET content = ?, image_url = ? WHERE id = ?;";
+        const inserts = [validPostContent, image_url, postId];
         sql = mysql.format(string, inserts);
     } else {
         //Création de la requête de mise à jour du post sans modifier le content
-        const string = "UPDATE posts SET image_url = ? WHERE id = ? AND users_id = ?;";
-        const inserts = [image_url, postId, user.id];
+        const string = "UPDATE posts SET image_url = ? WHERE id = ?;";
+        const inserts = [image_url, postId];
         sql = mysql.format(string, inserts);
     }
     //Requête sql

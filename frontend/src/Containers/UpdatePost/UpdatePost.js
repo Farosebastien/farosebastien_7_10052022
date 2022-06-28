@@ -12,6 +12,8 @@ import ImageUpload from "../../Components/ImageUpload/ImageUpload";
 import InputField from "../../Components/InputField/InputField";
 import Spinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
+import styles from "./UpdatePost.module.css"
+
 
 const UpdatePost = () => {
     //Authentification
@@ -66,7 +68,7 @@ const UpdatePost = () => {
                     Authorization: "Bearer " + auth.token
                 });
         } catch (err) {}
-        history("/post");
+        history(-1);
     };
 
     //Abort update comment
@@ -98,17 +100,18 @@ const UpdatePost = () => {
         <>
             {!isLoading && post && (
                 <div className={styles.container}>
-                    <Post id={postId} photo_url={post.photo_url} username={post.username} date={post.comment_date} modifyDate={post.modification_date} content={post.content} />
+                    <Post id={postId} image_url={post.image_url} post_id={post.post_id} user_id={post.users_id} photo_url={post.photo_url} username={post.username} date={post.post_date} modifyDate={post.modification_date} content={post.content} likes={post.likes} dislikes={post.dislikes} comments={post.commentsCounter} liked={post.liked} disliked={post.disliked} />
                     <div className={styles.wrapper}>
-                        <div className={styles.comment_wrap}>
-                            <form className={styles.comment_form} id="commentUpdate-form" onSubmit={UpdatePostHandler}>
-                                <InputField id="title" className={styles.box} name="title" type="text" placeholder="Modifier la publication" maxLength="65" element="textarea" textIsWhite="no" validators={[MinLength(2), MaxLength(65)]} errorText="Veuillez écrire quelque-chose" onInput={inputHandler} initialValue={post.content} initialValid={false} />
+                        <div className={styles.post_wrap}>
+                            <form className={styles.post_form} id="commentUpdate-form" onSubmit={UpdatePostHandler}>
+                                <ImageUpload center id="image" onInput={inputHandler} errorText="Choississez une image" post_id={post.post_id} />
+                                <InputField id="title" className={styles.box} name="title" type="text" placeholder="Modifier la publication" maxLength="65" element="textarea" textIsWhite="no" validators={[MinLength(2), MaxLength(65)]} errorText="Veuillez écrire quelque-chose" onInput={inputHandler} initialValue="" initialValid={false} />
                             </form>
                             <button form="commentUpdate-form" className={styles.btn} type="submit">
-                                <img className={styles.icon} src={send} alt="mettre à jour la publication" />
+                                <img className={styles.icon} src={send} alt="mettre à jour la publication" title="mettre à jour la publication" />
                             </button>
                         </div>
-                        <button className={styles.abort_btn} onClick={abortUpdateHandler}>Ne pas modifier la publication</button>
+                        <button className={styles.abort_btn} onClick={abortUpdateHandler} alt="Annuler">Ne pas modifier la publication</button>
                     </div>
                 </div>
             )}

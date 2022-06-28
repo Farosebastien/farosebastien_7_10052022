@@ -18,7 +18,8 @@ const Nav = (props) => {
     const path = useLocation().pathname;
     const history = useNavigate();
 
-    const id = useParams();
+    const { id } = useParams();
+    
 
     const backHandle = (e) => {
         e.preventDefault();
@@ -68,7 +69,9 @@ const Nav = (props) => {
             }
             break;
         default:
-            console.log("NAV: Something went wrong!");
+            if (auth.isLoggedIn) {
+                nav = <NavComments backHandle={backHandle} commentHandle={backHandle} />;
+            }
     }
 
     return (

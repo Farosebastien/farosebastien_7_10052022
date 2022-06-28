@@ -166,7 +166,7 @@ const Post = (props) => {
                     <Spinner asOverlay />
                 </div>
             )}
-            <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={datePost} modifyDate={modifyDatePost} onDelete={DeletePostHandler} onModify={ModifyPostHandler}/>
+            <UserHeader user_id={props.user_id} post_id={props.post_id} photo_url={props.photo_url} username={props.username} date={datePost} modifyDate={modifyDatePost} onDelete={DeletePostHandler} onModify={ModifyPostHandler}/>
             <section className={styles.block}>
                 {props.image_url === null ? null : (<img className={styles.photo} src={props.image_url} alt="post" />)}
                 <p className={styles.title}>{props.content}</p>

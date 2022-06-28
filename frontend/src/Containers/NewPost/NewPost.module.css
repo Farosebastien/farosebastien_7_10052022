@@ -25,7 +25,7 @@
 }
 
 .tab_border {
-    border-bottom: 2px solid #c30000;
+    border-bottom: 2px solid #fd2d01;
     width: 85%;
     margin: 0px auto;
 }
@@ -40,7 +40,7 @@
     text-align: center;
     text-transform: uppercase;
     margin: 1.3rem auto;
-    color: #c30000;
+    color: #fd2d01;
 }
 
 .form {
@@ -61,4 +61,8 @@
 
 .send_btn {
     margin: 1rem auto 3rem auto;
+}
+
+.back_btn_icon{
+    filter: invert(15%) sepia(76%) saturate(4057%) hue-rotate(353deg) brightness(87%) contrast(124%);
 }

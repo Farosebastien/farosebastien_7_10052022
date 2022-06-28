@@ -1,8 +1,6 @@
 html {
     /* set base font-size to equiv "10px", which is adapted to rem unit */
     font-size: 62.5%;
-    /* IE9-IE11 math fixing. See http://bit.ly/1g4X0bX */
-    /* thanks to @guardian, @victorbritopro and @eQRoeil */
     font-size: calc(1em * 0.625);
     height: 100%;
 }
@@ -20,11 +18,11 @@ body {
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "lato", monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Lato", monospace;
 }
 
 button {
-    font-family: "lato", "Roboto", sans-serif;
+    font-family: "Lato", "Roboto", sans-serif;
     font-size: 9px;
 }
 
