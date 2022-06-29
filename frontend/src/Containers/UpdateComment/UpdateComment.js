@@ -65,6 +65,7 @@ const UpdateComment = () => {
         } catch (err) {}
         inputHandler("commentUpdate", "", false);
         history(-1);
+        alert("Commentaire modifié !!!!");
     };
 
     //Abort update comment

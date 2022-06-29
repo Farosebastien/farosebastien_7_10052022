@@ -69,6 +69,7 @@ const UpdatePost = () => {
                 });
         } catch (err) {}
         history(-1);
+        alert("Publication modifiée !!!!");
     };
 
     //Abort update comment

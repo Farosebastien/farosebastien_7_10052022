@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const mysql = require("mysql");
 const validator = require("validator");
 const passwordValidator = require("password-validator");
+//Requête sql
+const sqlRequests = require("../models/sql-requests");
 //Erreur
 const HttpError = require("../models/http-error");
 //Database
@@ -38,9 +40,7 @@ exports.login = (req, res, next) => {
         return next(new HttpError("veuillez renseigner votre mot de passe", 400));
     }
     //Création de la requête sql
-    const string = "SELECT id, email, role, password FROM users WHERE email = ?;";
-    const inserts = [email];
-    const sql = mysql.format(string, inserts);
+    const sql = mysql.format(sqlRequests.login, [email]);
     //Requête sql et récupération dans la db
     db.query(sql, (error, user) => {
         //Si l'utilisateur est inexistant

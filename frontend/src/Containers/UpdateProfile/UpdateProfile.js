@@ -126,6 +126,7 @@ const UpdateProfile = () => {
                 Authorization: "Bearer " + auth.token,
             });
             window.location.reload();
+            alert("Vos informations ont bien été modifiées !!!!");
         } catch (err) {}
     };
 
@@ -145,6 +146,9 @@ const UpdateProfile = () => {
                     Authorization: "Bearer " + auth.token,
                 }
             );
+            auth.logout();
+            history(`/login`);
+            alert("Votre mot de passe a bien été modifié !!!!");
         } catch (err) {}
     };
 

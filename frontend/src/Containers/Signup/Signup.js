@@ -57,7 +57,6 @@ const SignUp = () => {
         }
 
         try {
-            console.log(formState)
             const data = {
                 firstname: formState.inputs.firstname.value,
                 lastname: formState.inputs.lastname.value,
@@ -65,7 +64,6 @@ const SignUp = () => {
                 email: formState.inputs.email.value,
                 password: formState.inputs.password.value
             };
-            console.log(JSON.stringify(data))
             const responseData = await sendRequest(`${process.env.REACT_APP_API_URL}/signup`, "POST", JSON.stringify(data), {
                 "Content-Type": " application/json"
             });
