@@ -138,6 +138,7 @@ const Post = (props) => {
         try {
             await sendRequest(`${process.env.REACT_APP_API_URL}/post/${props.id}`, "DELETE", null, {Authorization: "Bearer " + auth.token});
             history("/post");
+            alert("Post supprimé !!!!");
         } catch (err) {}
     };
 

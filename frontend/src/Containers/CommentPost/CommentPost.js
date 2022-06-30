@@ -25,6 +25,7 @@ const CommentPost = () => {
     const [post, setPost] = useState();
     //Comment Hook
     const [comments, setComments] = useState();
+    const [commentsCounter, setCommentsCounter] = useState();
     //Form useState
     const [formState, inputHandler] = useForm(
         {
@@ -45,10 +46,11 @@ const CommentPost = () => {
                 });
                 setPost(postData.post[0]);
                 setComments(postData.post[1].comments);
+                setCommentsCounter(postData.post[0].commentsCounter);
             } catch (err) {}
         };
         fetchPost();
-    }, [sendRequest, setPost, auth.token, postId, setComments]);
+    }, [sendRequest, setPost, auth.token, postId, setComments, setCommentsCounter]);
 
 
     //Post handler
@@ -73,6 +75,7 @@ const CommentPost = () => {
             );
         } catch (err) {}
         setComments([...comments, newCommentData.comment]);
+        setCommentsCounter(commentsCounter + 1);
         inputHandler("comment", "", false);
     };
 
@@ -80,6 +83,8 @@ const CommentPost = () => {
     const deleteCommentHandler = (deletedCommentId) => {
         const prevComments = [...comments];
         setComments(prevComments.filter((comment) => comment.comments_id !== deletedCommentId));
+        setCommentsCounter(commentsCounter - 1);
+        alert("Commentaire supprimé !!!!");
     };
 
     if (isLoading) {
@@ -107,7 +112,7 @@ const CommentPost = () => {
             <div className="container">
                 {!isLoading && post && comments && (
                     <div className={styles.wrapper}>
-                        <Post key={post.post_id} id={post.post_id} user_id={post.users_id} photo_url={post.photo_url} username={post.username} date={post.post_date} modifyDate={post.modification_date} content={post.content} image_url={post.image_url} likes={post.likes} dislikes={post.dislikes} comments={post.commentsCounter} liked={post.liked} disliked={post.disliked} post_link={`/post/${post.post_id}`} />
+                        <Post key={post.post_id} id={post.post_id} user_id={post.users_id} photo_url={post.photo_url} username={post.username} date={post.post_date} modifyDate={post.modification_date} content={post.content} image_url={post.image_url} likes={post.likes} dislikes={post.dislikes} comments={commentsCounter} liked={post.liked} disliked={post.disliked} post_link={`/post/${post.post_id}`} />
                         <section>
                             {comments.map((comment, index) => {
                                 return (
