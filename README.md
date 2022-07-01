@@ -23,6 +23,7 @@ Cloner l'application à partir de ce [repository GIT](https://github.com/Faroseb
     * HOSTDB="host de votre base de données"
     * DATABASE="nom de la base de données à créer"
     * JWT_SECRET_KEY="clé secrète pour les JSON web token"
+4. Lancer la commande `node dbConfig.js` pour configurer la bas de données.
 
 ### Démarrage
 
