@@ -27,7 +27,7 @@ const UpdatePost = () => {
     //Request Hook
     const { isLoading, sendRequest } = useHttpRequest();
     //FormState
-    const [formState, inputHandler] = useForm(
+    const [formState, inputHandler, setFormState] = useForm(
         {
             title: {
                 value: "",
@@ -48,10 +48,23 @@ const UpdatePost = () => {
                     Authorization: "Bearer " + auth.token
                 });
                 setPost(postData.post[0]);
+                setFormState(
+                    {
+                        title: {
+                            value: postData.post[0].content,
+                            isValid: true
+                        },
+                        image: {
+                            value: postData.post[0].image_url,
+                            isValid: true
+                        }
+                    },
+                    true
+                )
             } catch (err) {}
         };
         fetchComment();
-    }, [sendRequest, postId, auth.token]);
+    }, [sendRequest, postId, auth.token, setFormState]);
 
     //Fetch update comment
     const UpdatePostHandler = async(event) => {
@@ -105,8 +118,8 @@ const UpdatePost = () => {
                     <div className={styles.wrapper}>
                         <div className={styles.post_wrap}>
                             <form className={styles.post_form} id="commentUpdate-form" onSubmit={UpdatePostHandler}>
-                                <ImageUpload center id="image" onInput={inputHandler} errorText="Choississez une image" post_id={post.post_id} />
-                                <InputField id="title" className={styles.box} name="title" type="text" placeholder="Modifier la publication" maxLength="150" element="textarea" textIsWhite="no" validators={[MinLength(2), MaxLength(150)]} errorText="Veuillez écrire quelque-chose" onInput={inputHandler} initialValue="" initialValid={false} />
+                                <ImageUpload center id="image" onInput={inputHandler} errorText="Choississez une image" post_id={post.post_id}/>
+                                <InputField id="title" className={styles.box} name="title" type="text" placeholder="Modifier la publication" maxLength="150" element="textarea" textIsWhite="no" validators={[MinLength(2), MaxLength(150)]} errorText="Veuillez écrire quelque-chose" onInput={inputHandler} initialValue={post.content} initialValid={false} />
                             </form>
                             <button form="commentUpdate-form" className={styles.btn} type="submit">
                                 <img className={styles.icon} src={send} alt="mettre à jour la publication" title="mettre à jour la publication" />

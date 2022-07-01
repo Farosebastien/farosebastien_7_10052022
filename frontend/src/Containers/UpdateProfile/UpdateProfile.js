@@ -77,7 +77,7 @@ const UpdateProfile = () => {
                     {
                         image: {
                             value: userData.profile.photo_url,
-                            isValid: false,
+                            isValid: true,
                         },
                         firstName: {
                             value: userData.profile.firstame,

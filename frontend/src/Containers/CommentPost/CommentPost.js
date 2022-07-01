@@ -122,7 +122,7 @@ const CommentPost = () => {
                         </section>
                         <div className={styles.comment_wrap}>
                             <form className={styles.comment_form} id="comment-form" onSubmit={postCommentHandler}>
-                                <InputField id="comment" className={styles.box} name="comment" type="text" placeholder="Votre commentaire" maxLength="65" element="textarea" textIsWhite="no" validators={[MinLength(2), MaxLength(65)]} errorText="Veuillez écrire un commentaire" onInput={inputHandler} initialValue="" initialValid={false} />
+                                <InputField id="comment" className={styles.box} name="comment" type="text" placeholder="Votre commentaire" maxLength="100" element="textarea" textIsWhite="no" validators={[MinLength(2), MaxLength(100)]} errorText="Veuillez écrire un commentaire" onInput={inputHandler} initialValue="" initialValid={false} />
                             </form>
                             <button form="comment-form" className={styles.btn} type="submit">
                                 <img className={styles.icon} src={send} alt="publier commentaire" />

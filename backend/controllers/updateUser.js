@@ -1,5 +1,6 @@
 //Requires
 const jwt = require ("jsonwebtoken");
+const fs = require("fs");
 const bcrypt = require("bcrypt");
 const mysql = require("mysql");
 const validator = require("validator");
@@ -41,12 +42,14 @@ exports.updateUser = (req, res, next) => {
     const { firstname, lastname, username, email } = req.body;
     let photo_url;
     let validPhoto_url;
+    let sqlForFile;
     //Si il n'y a pas d'image on laisse à null
     if (req.body.image === "null") {
         photo_url;
     //Mise à jour de l'image 
     } else if(req.file) {
         photo_url = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+        sqlForFile = mysql.format(sqlRequests.deleteUserForFile, [user.id]);
     //Si l'image ne change pas
     } else {
         //Validation de image_url contre les injections sql
@@ -79,16 +82,53 @@ exports.updateUser = (req, res, next) => {
         //Création de la requête sql
         const sql = mysql.format(sqlRequests.updateUser, [firstname, lastname, username, email, photo_url, user.id]);
         //Requête sql et mise à jour du profil dans la DB
-        db.query(sql, (error, profile) => {
-            if(!error) {
-                res.status(200).json({ 
-                    message: "profil mis à jour"
-                });
-            //Si il y a une erreur, la mise à jour a échouée
-            } else {
-                return next(new HttpError("erreur, mise à jour du profil échouée", 400))
-            }
-        });
+        if (!sqlForFile) {
+            db.query(sql, (error, profile) => {
+                if(!error) {
+                    res.status(201).json({ 
+                        message: "profil mis à jour"
+                    });
+                //Si il y a une erreur, la mise à jour a échouée
+                } else {
+                    return next(new HttpError("erreur, mise à jour du profil échouée", 400))
+                }
+            });
+        //Si il y a une nouvelle image , vérification qu'il n'y en a pas une ancienne
+        } else {
+            db.query(sqlForFile, (error, result) => {
+                const file = String(result[0].photo_url);
+                //si il y en avait une on la supprime avant de mettre à jour le post
+                if (file.length > 0) {
+                    //Récupération du nom de l'image dans le dossier images
+                    const filename = file.split("/images/")[1];
+                    //Suppression de l'image du dossier image
+                    fs.unlink(`images/${filename}`, () => {
+                        //Une fois le fichier supprimé, requête sql de mise à jour du profil
+                        db.query(sql, (error, profile) => {
+                            if(!error) {
+                                res.status(201).json({ 
+                                    message: "profil mis à jour"
+                                });
+                            //Si il y a une erreur, la mise à jour a échouée
+                            } else {
+                                return next(new HttpError("erreur, mise à jour du profil échouée", 400))
+                            }
+                        });
+                    });
+                } else {
+                    db.query(sql, (error, profile) => {
+                        if(!error) {
+                            res.status(201).json({ 
+                                message: "profil mis à jour"
+                            });
+                        //Si il y a une erreur, la mise à jour a échouée
+                        } else {
+                            return next(new HttpError("erreur, mise à jour du profil échouée", 400))
+                        }
+                    });
+                }
+            });
+        }
     //Si au moins une des entrées n'est pas valide
     } else {
         //Gestion erreur d'entrées

@@ -61,7 +61,7 @@ const ImageUpload = (props) => {
                     ) : (
                             <div className={styles.icon_block}>
                                 <img className={styles.icon} src={Image} alt="" />
-                                <span className={styles.text}>Veuillez choisir une image</span>
+                                <span className={styles.text}>Insérer une nouvelle image</span>
                             </div>
                     )}
                 </label>

@@ -32,7 +32,7 @@ const NewPost = (props) => {
             },
             image: {
                 value: null,
-                isValid: false
+                isValid: true
             }
         },
         false
@@ -41,6 +41,7 @@ const NewPost = (props) => {
     //Envoi du post au backend
     const sendPostHandler = async (event) => {
         event.preventDefault();
+        console.log(formState)
         if(!formState.isValid) {
             return;
         }

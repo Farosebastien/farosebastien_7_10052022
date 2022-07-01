@@ -1,5 +1,6 @@
 //Requires
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 const mysql = require("mysql");
 //Requête sql
 const sqlRequests = require("../models/sql-requests");
@@ -29,7 +30,7 @@ exports.updatePost = (req, res, next) => {
     let validPostContent;
     let image_url;
     let validImage_url;
-    let sql;
+    let sqlForFile;
     //Validation de content contre les injections sql
     if (String(postContent).match(regExInjection) == null) {
         validPostContent = postContent;
@@ -42,34 +43,68 @@ exports.updatePost = (req, res, next) => {
     //Mise à jour de l'image 
     } else if(req.file) {
         image_url = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+        sqlForFile = mysql.format(sqlRequests.getPostImage, [postId]);
     //Si l'image ne change pas
     } else {
         //Validation de image_url contre les injections sql
-        validImage_url = req.body.image_url;
+        validImage_url = req.body.image;
         if (String(validImage_url).match(regExInjection) == null) {
             image_url = validImage_url;
         } else {
             return next(new HttpError("requête non autorisée", 403));
         }
     }
-    if (validPostContent != null) {
-        //Création de la requête de mise à jour du post avec content
-        sql = mysql.format(sqlRequests.updatePost, [validPostContent, image_url, postId]);
+    //Création de la requête de mise à jour du post avec content
+    const sql = mysql.format(sqlRequests.updatePost, [validPostContent, image_url, postId]);
+    //Requête sql si ce n'est pas une nouvelle image
+    if (!sqlForFile) {
+        db.query(sql, (error, result) => {
+            if(!error) {
+                res.status(201).json({ 
+                    message: "publication mise à jour"
+                });
+            //Si il y a une erreur, un message est affiché
+            } else {
+                return next(new HttpError("erreur lors de la mise à jour de la publication", 500));
+            }
+        });
+    //Si il y a une nouvelle image , vérification qu'il n'y en a pas une ancienne
     } else {
-        //Création de la requête de mise à jour du post sans modifier le content
-        sql = mysql.format(sqlRequests.updateImagePost, [image_url, postId]);
-    }
-    //Requête sql
-    db.query(sql, (error, result) => {
-        if(!error) {
-            res.status(201).json({ 
-                message: "publication mise à jour"
-            });
-        //Si il y a une erreur, un message est affiché
-        } else {
-            return next(new HttpError("erreur lors de la mise à jour de la publication", 500));
-        }
-    });
+        db.query(sqlForFile, (error, result) => {
+            const file = String(result[0].image_url);
+            //si il y en avait une on la supprime avant de mettre à jour le post
+            if (file.length > 0) {
+                //Récupération du nom de l'image dans le dossier images
+                const filename = file.split("/images/")[1];
+                //Suppression de l'image du dossier image
+                fs.unlink(`images/${filename}`, () => {
+                    //Une fois le fichier supprimé, requête sql de mise à jour du post
+                    db.query(sql, (error, result) => {
+                        if (!error) {
+                            res.status(201).json({ 
+                                message: "publication mise à jour"
+                            });
+                        }
+                        //Si il y a une erreur, un message est affiché
+                        else {
+                            return next(new HttpError("erreur lors de la mise à jour du post", 500));
+                        }
+                    });
+                });
+            } else {
+                db.query(sql, (error, result) => {
+                    if(!error) {
+                        res.status(201).json({ 
+                            message: "publication mise à jour"
+                        });
+                    //Si il y a une erreur, un message est affiché
+                    } else {
+                        return next(new HttpError("erreur lors de la mise à jour de la publication", 500));
+                    }
+                });
+            }
+        });
+    }  
 };
 //Mise à jour d'un commentaire
 exports.updateComment = (req, res, next) => {

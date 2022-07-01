@@ -101,7 +101,7 @@ const UpdateComment = () => {
                     <div className={styles.wrapper}>
                         <div className={styles.comment_wrap}>
                             <form className={styles.comment_form} id="commentUpdate-form" onSubmit={UpdateCommentHandler}>
-                                <InputField id="commentUpdate" className={styles.box} name="commentUpdate" type="text" placeholder="Modifier le commentaire" maxLength="65" element="textarea" textIsWhite="no" validators={[MinLength(2), MaxLength(65)]} errorText="Veuillez écrire un commentaire" onInput={inputHandler} initialValue="" initialValid={false} />
+                                <InputField id="commentUpdate" className={styles.box} name="commentUpdate" type="text" placeholder="Modifier le commentaire" maxLength="65" element="textarea" textIsWhite="no" validators={[MinLength(2), MaxLength(65)]} errorText="Veuillez écrire un commentaire" onInput={inputHandler} initialValue={comment.content} initialValid={false} />
                             </form>
                             <button form="commentUpdate-form" className={styles.btn} type="submit">
                                 <img className={styles.icon} src={send} alt="mettre à jour le commentaire" title="mettre à jour le commentaire" />
