@@ -1,6 +1,6 @@
 # Reseau social de GROUPOMANIA
 
-Cette application a été créee avec React-JS pour la partie front-end.\
+Cette application a été créée avec React-JS pour la partie front-end.\
 Et pour la partie back-end, avec Node-JS.\
 Une base de données SQL y est égalemment associée.
 
@@ -23,7 +23,7 @@ Cloner l'application à partir de ce [repository GIT](https://github.com/Faroseb
     * HOSTDB="host de votre base de données"
     * DATABASE="nom de la base de données à créer"
     * JWT_SECRET_KEY="clé secrète pour les JSON web token"
-4. Lancer la commande `node dbConfig.js` pour configurer la bas de données.
+4. Lancer la commande `node dbConfig.js` pour configurer la base de données.
 
 ### Démarrage
 
@@ -40,9 +40,9 @@ Valider par la touche `o` puis `entrée`.
 
 ### Installation
 
-1. A l'aide du terminal, se placer dans le dossier `/backend`.
+1. A l'aide du terminal, se placer dans le dossier `/frontend`.
 2. Lancer la commande `npm install`.
-3. Créer un fichier `.env` à la racine du dossier `/backend` et y entrer les informations suivantes:
+3. Créer un fichier `.env` à la racine du dossier `/frontend` et y entrer les informations suivantes:
     * REACT_APP_API_URL=http://localhost:5000
 
 ### Démarrage
