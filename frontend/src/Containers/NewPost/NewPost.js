@@ -41,7 +41,6 @@ const NewPost = (props) => {
     //Envoi du post au backend
     const sendPostHandler = async (event) => {
         event.preventDefault();
-        console.log(formState)
         if(!formState.isValid) {
             return;
         }
@@ -104,9 +103,8 @@ const NewPost = (props) => {
                         </div>
                     </header>
                     <div className="container">
-                        <form className={styles.form} id="send-post-form" onSubmit={sendPostHandler}>
+                        <form className={styles.form} id="send-post-form" onSubmit={sendPostHandler}><InputField id="title" name="title" type="text" placeholder="Contenu de la publication" maxLength="150" element="textarea" hasLabel="no" textIsWhite="no" validators={[MinLength(2), MaxLength(150)]} errorText="Veuillez écrire un commentaire pour votre publication" onInput={inputHandler} initialValue={formState.inputs.title.value} initialValid={formState.inputs.title.isValid} />
                             <ImageUpload center id="image" onInput={inputHandler} errorText="Choississez une image" />
-                            <InputField id="title" name="title" type="text" placeholder="Contenu de la publication" maxLength="150" element="textarea" hasLabel="no" textIsWhite="no" validators={[MinLength(2), MaxLength(150)]} errorText="Veuillez écrire un commentaire pour votre publication" onInput={inputHandler} initialValue={formState.inputs.title.value} initialValid={formState.inputs.title.isValid} />
                             {sendBtn}
                         </form>
                     </div>
