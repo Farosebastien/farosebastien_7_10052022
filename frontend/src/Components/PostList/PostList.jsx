@@ -1,14 +1,22 @@
-import React from "react";
 import Post from "../Post/Post";
+import styled from "styled-components";
 
-import styles from "./PostList.module.css";
+const PostContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 77.4vh;
+    overflow-y: scroll;
+    background-color: #ffd7d7;
+    border-radius: 0 0 5rem 5rem;
+    padding: 0 2rem;
+`
 
 const PostList = (props) => {
     if (props.items.posts.length === 0) {
         return (
-            <div className={styles.container}>
+            <PostContainer>
                 <h2>Pas de Posts !!</h2>
-            </div>
+            </PostContainer>
         );
     }
 

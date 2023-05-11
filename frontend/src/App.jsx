@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { useAuth } from "./Hooks/authHook";
 import { AuthContext } from "./Context/authContext";
@@ -16,8 +15,6 @@ import CommentPost from "./Containers/CommentPost/CommentPost";
 import NewPost from "./Containers/NewPost/NewPost";
 import UpdatePost from "./Containers/UpdatePost/UpdatePost";
 import UpdateComment from "./Containers/UpdateComment/UpdateComment";
-
-import "./App.css";
 
 const App = () => {
   const { userId, token, account, login, logout } = useAuth();

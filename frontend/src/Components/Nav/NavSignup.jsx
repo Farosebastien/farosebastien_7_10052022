@@ -1,9 +1,6 @@
-import React from "react";
-
 import back from "../../images/back-icon.svg";
 import signup from "../../images/signup-icon.svg";
-
-import ActionBtn from "./../Buttons/ActionBtn/ActionBtn";
+import ActionBtn from "../Buttons/ActionBtn/ActionBtn";
 
 const NavSignUp = (props) => {
     return (

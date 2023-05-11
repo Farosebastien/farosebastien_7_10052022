@@ -1,8 +1,5 @@
-import React from "react";
-
 import close from "../../images/close-icon.svg";
-
-import ActionBtn from "./../Buttons/ActionBtn/ActionBtn";
+import ActionBtn from "../Buttons/ActionBtn/ActionBtn";
 
 const NavMenu = (props) => {
     return (

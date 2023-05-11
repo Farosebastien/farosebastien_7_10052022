@@ -1,15 +1,13 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../Context/authContext";
 import { useParams } from "react-router-dom";
 import back from "../../images/back-icon.svg";
 import modify from "../../images/modify-icon.svg";
+import NavBtn from "../Buttons/NavBtn/NavBtn";
 
-import NavBtn from "./../Buttons/NavBtn/NavBtn";
-
-const NavUser = (props) => {
+const NavUser = () => {
     const auth = useContext(AuthContext);
     const userId = Number(useParams().id);
-
     let modifyBtn;
 
     if (auth.userId === userId) {

@@ -1,10 +1,23 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/authContext";
 import { useHttpRequest } from "../../Hooks/httpRequestHook";
 import UserHeader from "../UserHeader/UserHeader";
+import styled from 'styled-components';
 
-import styles from "./Comment.module.css";
+const CommentBlock = styled.div`
+    border-bottom: 1px solid #bdbdbd;
+    margin-bottom: 16px;
+    text-align: left;
+`
+
+const CommentText = styled.p`
+    font-size: 16px;
+    line-height: 20px;
+    color: #000000;
+    margin: auto 0;
+    margin-bottom: 16px;
+`
 
 const Comment = (props) => {
     //Authentification context
@@ -38,12 +51,12 @@ const Comment = (props) => {
         history(`/comment/update/${props.id}`);
     }
     return (
-        <div>
+        <>
             <UserHeader user_id={props.user_id} photo_url={props.photo_url} username={props.username} date={datePost} modifyDate={modifyDatePost} onDelete={DeleteCommentHandler} onModify={updateCommentHandler}/>
-            <div className={styles.block}>
-                <p className={styles.text}>{props.content}</p>
-            </div>
-        </div>
+            <CommentBlock>
+                <CommentText>{props.content}</CommentText>
+            </CommentBlock>
+        </>
     );
 };
 

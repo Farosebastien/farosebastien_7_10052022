@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../Context/authContext";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
+import styled from "styled-components";
 import NavHome from "./NavHome";
 import NavLogin from "./NavLogin";
 import NavSignUp from "./NavSignup";
@@ -11,22 +12,23 @@ import NavComments from "./NavComments";
 import NavUser from "./NavUser";
 import NavUpdate from "./NavUpdate";
 
-import "./Nav.css";
+const NavBtnList = styled.div`
+    display: flex;
+    flex-direction: row;
+    height: 12vh;
+    justify-content: space-evenly;
+`
 
-const Nav = (props) => {
+const Nav = () => {
     const auth = useContext(AuthContext);
     const path = useLocation().pathname;
     const history = useNavigate();
-
     const { id } = useParams();
-    
-
+    let nav;
     const backHandle = (e) => {
         e.preventDefault();
         history(-1);
     };
-
-    let nav;
 
     switch (path) {
         case "/":
@@ -76,7 +78,7 @@ const Nav = (props) => {
 
     return (
         <footer>
-            <div className="nav_btn_list">{nav}</div>
+            <NavBtnList>{nav}</NavBtnList>
         </footer>
     );
 };

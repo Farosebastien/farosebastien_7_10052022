@@ -1,12 +1,39 @@
-import React from "react";
 import { Link } from "react-router-dom";
-
+import styled from 'styled-components';
 import like from "../../../images/like-icon.svg";
 import dislike from "../../../images/dislike-icon.svg";
 import comment from "../../../images/comment-icon.svg";
 import comments from "../../../images/comments-icon.svg";
 
-import styles from "./ReactionBtn.module.css";
+const ReactionButton = styled.button`
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    font-size: 1.5rem;
+    border: 0;
+    margin: auto 20px auto 0;
+    padding: 0;
+    cursor: pointer;
+`
+
+const ReactionDiv = styled.div`
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    font-size: 1.5rem;
+    border: 0;
+    margin: auto 20px auto 0;
+    padding: 0;
+    cursor: pointer;
+`
+
+const ImgIcon = styled.img`
+    width: auto;
+    height: 1.8rem;
+    margin-right: 8px;
+`
 
 const ReactionBtn = (props) => {
     //couleur du bouton
@@ -49,26 +76,26 @@ const ReactionBtn = (props) => {
     switch (props.btnType) {
         case "functional":
             btn = (
-                <button name={props.name} className={`${styles.reaction_btn} ${props.styling}`} onClick={props.onReaction}>
-                    <img className={`${styles.icon} ${reactionColor}`} src={icon} alt="" />
+                <ReactionButton name={props.name} className={props.styling} onClick={props.onReaction}>
+                    <ImgIcon className={reactionColor} src={icon} alt="" />
                     <span>{props.text}</span>
-                </button>
+                </ReactionButton>
             );
             break;
         case "link":
             btn = (
-                <Link to={props.link} className={`${styles.reaction_btn} ${props.styling}`}>
-                    <img className={`${styles.icon} ${reactionColor}`} src={icon} alt="" />
+                <Link to={props.link} className={props.styling}>
+                    <ImgIcon className={reactionColor} src={icon} alt="" />
                     <span>{props.text}</span>
                 </Link>
             );
             break;
         case "decor":
             btn = (
-                <div className={`${styles.reaction_btn} ${props.styling}`}>
-                    <img className={`${styles.icon} ${reactionColor}`} src={icon} alt="" />
+                <ReactionDiv className={props.styling}>
+                    <ImgIcon className={reactionColor} src={icon} alt="" />
                     <span>{props.text}</span>
-                </div>
+                </ReactionDiv>
             );
             break;
         default:
